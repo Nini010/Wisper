@@ -16,7 +16,7 @@ body {
 
 /* Header */
 .header {
-  height: 50px;
+  height: 60px;
   display: flex;
   justify-content: center;
   padding: 0 10px;
@@ -24,7 +24,7 @@ body {
   vertical-align: middle;
   padding-top: 1%;
   background-color: transparent;
-  border-bottom: 1px solid #1c1c1e;
+  border-bottom: 1px solid #535C91;
   margin-bottom: 1%;
 }
 
