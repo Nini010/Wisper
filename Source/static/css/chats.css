@@ -1,8 +1,11 @@
 /* Body - Uniform Dark Theme */
 body {
-  background-color: #1e1f22;
-  color: #ffffff;
+  background-color: #070F2B;
+  color: #9290C3;
   margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter',
+    sans-serif;
 }
 
 @font-face {
@@ -11,23 +14,16 @@ body {
   font-weight: normal;
 }
 
-/* Background Section */
-.bg {
-  background-color: #1e1f22;
-  min-height: 100vh;
-}
-
 /* Header */
 .header {
   height: 50px;
-  display: grid;
-  grid-template-columns: 50px 1fr 50px;
-  justify-content: space-between;
+  display: flex;
+  justify-content: center;
   padding: 0 10px;
   align-items: center;
   vertical-align: middle;
   padding-top: 1%;
-  background-color: #1e1f22;
+  background-color: transparent;
   border-bottom: 1px solid #1c1c1e;
   margin-bottom: 1%;
 }
@@ -47,40 +43,6 @@ body {
   font-family: 'josephsophia', Arial, Helvetica, sans-serif;
 }
 
-.left-section {
-  display: flex;
-  align-items: center;
-}
-
-/* Hamburger Button */
-.hamburger-btn {
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.hamburger-btn img.hamburger-menu {
-  width: 28px;
-  height: auto;
-  display: flex;
-  margin-top: 40%;
-  transition: transform 0.3s ease;
-}
-
-.hamburger-btn.active img.hamburger-menu {
-  transform: rotate(90deg);
-}
-
-.hamburger-btn:hover {
-  opacity: 0.8;
-}
-
-.right-section {
-  height: 32px;
-  cursor: pointer;
-  margin-top: 35%;
-}
 
 /* Search Bar */
 .search-container {
@@ -133,6 +95,13 @@ body {
 }
 
 /* Accounts Section */
+.acc {
+  display: flexbox;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: transparent;
+}
+
 .accounts {
   display: grid;
   grid-template-columns: 70px 1fr;
@@ -140,7 +109,7 @@ body {
   gap: 10px;
   padding: 10px;
   border-radius: 5px;
-  background-color: #1e1f22;
+  background-color: transparent;
 }
 
 .dp img.pfp {
@@ -181,83 +150,6 @@ body {
   text-decoration: none;
 }
 
-.offcanvas {
-  background-color: #1c1c1e;
-  color: #ffffff;
-  border-left: 1px solid #333;
-}
-
-.offcanvas-header {
-  border-bottom: 1px solid #5c5858;
-  background-color: #1c1c1e;
-  display: flex;
-  align-items: center;
-
-}
-
-.offcanvas-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0;
-}
-
-
-.offcanvas-title-add {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 8px;
-  color: #ffffff;
-  font-family: Arial, sans-serif;
-}
-
-.pf-tile {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: 10px;
-
-}
-
-.btn-close {
-  filter: invert(100%);
-}
-
-.offcanvas-body {
-  padding: 10px;
-  color: #cccccc;
-  background-color: #1c1c1e;
-}
-
-.dropdown-menu {
-  background-color: #1c1c1e;
-  border: 1px solid #333;
-}
-
-.dropdown-item {
-  color: #d0d0d0;
-}
-
-.dropdown-item:hover {
-  background-color: #444;
-  color: #ffffff;
-  transition: background-color 0.2s ease;
-}
-
-.close-btn {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.offcanvas-footer {
-  display: grid;
-  grid-template-columns: 65px 1fr 70px;
-  align-items: center;
-  padding: 10px 15px;
-  border-top: 1px solid #5c5858;
-  background-color: #1c1c1e;
-}
-
 .gear-icon {
   text-decoration: none;
   display: flex;
@@ -282,9 +174,27 @@ body {
   margin-right: 2%;
 }
 
-.addPost-btn {
+
+.n-btn {
   background-color: transparent;
   border: none;
+}
+
+.n-btn:focus {
+  outline: none;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+}
+
+.icons {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  height: 35px;
 }
 
 p {
@@ -311,8 +221,44 @@ p {
   color: #cccccc;
   background-color: #1e1f22;
   border-bottom: #5b5b62;
+  font-size: 1.5rem;
 }
 
 .bi-gear {
   margin-bottom: 2px;
+}
+
+.Nav-opt {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  border-top: 2px solid #3a3b3e;
+  height: 60px;
+  background-color: transparent;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  align-items: center;
+}
+
+.hamburger-btn:focus,
+.add-btn:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.req {
+  display: flexbox;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: transparent;
+
+}
+
+.usernameS {
+  padding: 2% 2% 2% 2%;
+  font-size: 1rem;
+  color: #aaaaaa;
+  margin-bottom: 0%;
 }
