@@ -1,92 +1,35 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-  <title>Wisper</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
-  <link rel="stylesheet" href="static\css\chats.css">
-  <link rel="stylesheet" href="static\css\settings.css">
-</head>
+{% block content %}
+<!--Main-body-->
+<div class="search-container">
+  <input class="search-bar" type="text" placeholder="Search">
+  <button class="search-icon">
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" aria-label="Search"
+      class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24">
+      <title fill="#F5F5F5">Search</title>
+      <path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="none" stroke="#F5F5F5" stroke-linecap="round"
+        stroke-linejoin="round" stroke-width="2px"></path>
+      <line fill="none" stroke="#F5F5F5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px" x1="16.511"
+        x2="22" y1="16.511" y2="22">
 
-<body>
-  <div class="bg">
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!--Header-->
-    <div id="main">
-      <div class="header">
-       
-          <p class="appName">Wisper</p>
-      
-      </div>
-      <!--Main-body-->
-      <div class="search-container">
-        <input class="search-bar" type="text" placeholder="Search">
-        <button class="search-icon">
-          <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" aria-label="Search" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24">
-            <title fill="#F5F5F5">Search</title>
-            <path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="none" stroke="#F5F5F5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px"></path>
-            <line fill="none" stroke="#F5F5F5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px" x1="16.511" x2="22" y1="16.511" y2="22">
-
-          </line>
-          </svg>
-        </button>
-      </div>
-      <!--Friend profiles-->
-      <div class="acc">
-        <div class="accounts">
-          <div class="dp">
-            <img class="pfp" src="static/images/pfp.jpg">
-          </div>
-          <a href="{{ url_for('DM') }}" class="dm-link">
-          <div class="account-info">
-            <p class="name">Oliver</p>
-            <p class="username">usernames</p>
-          </div>
-          </a>
-        </div>
-      </div>
-      <!--Footer-->
-      <div class="Nav-opt" id="footer">
-        <div class="profile-page icon-container ">
-          <button class="n-btn">
-            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" class=" icons" aria-label="Tags" class="x1lliihq x1n2onr6 x9bdzbf" fill="currentColor" height="22" role="img" viewBox="0 0 24 24" width="22"><title fill="#FFFFFF">Tags</title><path d="M21.334 23H2.666a1 1 0 0 1-1-1v-1.354a6.279 6.279 0 0 1 6.272-6.272h8.124a6.279 6.279 0 0 1 6.271 6.271V22a1 1 0 0 1-1 1ZM12 13.269a6 6 0 1 1 6-6 6.007 6.007 0 0 1-6 6Z" fill="#FFFFFF"></path></svg>
-          </button>
-        </div>
-
-        <a href="{{ url_for('search') }}" class="search-link">
-          <div class="search-page icon-container">
-            <button class="n-btn">
-              <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" aria-label="Search" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="22" role="img" viewBox="0 0 24 24" width="22"><title fill="#F5F5F5">Search</title><path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="none" stroke="#F5F5F5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px"></path><line fill="none" stroke="#F5F5F5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px" x1="16.511" x2="22" y1="16.511" y2="22"></line></svg>
-            </button>
-          </div>
-        </a>
-        <!--<a href="{{ url_for('addPost') }}" class="add-link">-->
-        <div class="addPost icon-container">
-          <button class="n-btn" type="button" >
-            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" aria-label="New post" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title fill="#F5F5F5">New post</title><path d="M2 12v3.45c0 2.849.698 4.005 1.606 4.944.94.909 2.098 1.608 4.946 1.608h6.896c2.848 0 4.006-.7 4.946-1.608C21.302 19.455 22 18.3 22 15.45V8.552c0-2.849-.698-4.006-1.606-4.945C19.454 2.7 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.547 2 5.703 2 8.552Z" fill="none" stroke="#F5F5F5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px"></path><line fill="none" stroke="#F5F5F5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px" x1="6.545" x2="17.455" y1="12.001" y2="12.001"></line><line fill="none" stroke="#F5F5F5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px" x1="12.003" x2="12.003" y1="6.545" y2="17.455"></line></svg>
-          </button>
-        </div>
-      <!--</a>-->
-
-        <div class="notifs icon-container">
-          <button class="n-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" class="bi bi-bell-fill icons" viewBox="0 0 16 16">
-              <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
-            </svg>
-          </button>
-        </div>
-
-        <div class="home icon-container">
-          <button class="n-btn">
-            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" aria-label="Home" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title fill="#F5F5F5">Home</title><path d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l10-9.543a1.001 1.001 0 0 1 1.38 0l10 9.543a1.002 1.002 0 0 1 .31.724V22a1 1 0 0 1-1 1Z" fill="#F5F5F5"></path></svg>
-          </button>
-        </div>
-
-      </div>
+      </line>
+    </svg>
+  </button>
+</div>
+<!--Friend profiles-->
+<div class="acc">
+  <div class="accounts">
+    <div class="dp">
+      <img class="pfp" src="static/images/pfp.jpg">
     </div>
+    <a href="{{ url_for('DM') }}" class="dm-link">
+      <div class="account-info">
+        <p class="name">Oliver</p>
+        <p class="username">usernames</p>
+      </div>
+    </a>
   </div>
-</body>
-
-</html>
+</div>
+</div>
+{% endblock %}
