@@ -98,19 +98,26 @@ nav a:hover {
 
 }
 
-/*Sign In*/
+/*Sign Up*/
+.heading {
+  padding: 9%;
+}
+
 .container-signin {
-  background-color: transparent;
+  background-color: #1B1A55;
   padding: 30px;
   padding-top: 10px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(146, 144, 195, 0.2);
-  width: 450px;
+  width: 300px;
+  height: 300px;
+  justify-self: center;
+  align-content: center;
   text-align: center;
-  margin: auto;
+  margin-top: 10%;
 }
 
-input,
+/* input,
 select {
   width: 100%;
   border-radius: 0.5rem;
@@ -136,6 +143,7 @@ label {
   border: none;
   border-radius: 4px;
   margin: 0;
+  margin-top: 3%;
   width: 200px;
   height: 50px;
   cursor: pointer;
@@ -143,23 +151,57 @@ label {
 
 .signin:hover {
   background-color: rgb(0, 0, 0);
-}
+} */
 
-button:hover {
-  background-color: rgb(38, 54, 92);
-}
-
-.btn-google {
-  color: #545454;
-  background-color: #ffffff;
-  height: 50px;
-  font-size: 100%;
-  padding: 2% 3%;
-  box-shadow: 0 1px 2px 1px #ddd;
-  text-align: start;
+.signup-btn {
+  display: grid;
+  grid-template-rows: 50% 50%;
+  justify-content: center;
+  justify-self: center;
   margin-top: 2%;
+  gap: 10px;
+  width: 300px;
+}
+
+.btn-google,
+.btn-fb {
+  color: #545454;
+  display: grid;
+  font-size: 16px;
+  grid-template-columns: 20% 1fr;
+  background-color: rgba(255, 255, 255, 0.907);
+  height: 50px;
+  padding: 4% 5%;
+  box-shadow: 0 1px 2px 1px #ddd;
+  width: 220px;
+  border-radius: 1%;
+  text-align: justify;
+  justify-content: center;
+}
+
+.logo-img {
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.head {
+  margin-top: 2px;
+}
+
+.f {
+  margin-top: 4px;
+}
+
+.fb {
+  margin-bottom: 1%;
 }
 
 .btn-google:hover {
+  background-color: #f1f1f1;
+}
+
+.btn-fb:hover {
   background-color: #f1f1f1;
 }
