@@ -18,14 +18,13 @@ body {
 .header {
   height: 60px;
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 0 10px;
+  padding: 0 0;
   align-items: center;
   vertical-align: middle;
-  padding-top: 1%;
   background-color: transparent;
-  border-bottom: 1px solid #535C91;
-  margin-bottom: 1%;
+  border-bottom: 2px solid #9290C3;
 }
 
 /* App Name */
@@ -33,11 +32,10 @@ body {
   display: flex;
   align-self: center;
   justify-content: center;
-  height: 40px;
+  height: 50px;
   font-size: 40px;
   text-align: center;
   margin: 0 0;
-  padding-right: 5%;
   border: none;
   color: #ffffff;
   font-family: 'josephsophia', Arial, Helvetica, sans-serif;
@@ -62,8 +60,8 @@ body {
   border-radius: 20px;
   font-size: 16px;
   outline: none;
-  background-color: #5b5b62;
-  color: #fbfbfb;
+  background-color: #1B1A55;
+  color: #9290C3;
   box-shadow: inset 1px 2px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -89,8 +87,8 @@ body {
 }
 
 .search-icon img {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   filter: invert(100%);
 }
 
@@ -168,11 +166,6 @@ body {
   }
 }
 
-.add-btn {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 2%;
-}
 
 
 .n-btn {
@@ -231,7 +224,7 @@ p {
 .Nav-opt {
   display: grid;
   grid-template-columns: 20% 20% 20% 20% 20%;
-  border-top: 2px solid #3a3b3e;
+  border-top: 2px solid #9290C3;
   height: 60px;
   background-color: transparent;
   position: fixed;
@@ -242,11 +235,6 @@ p {
   align-items: center;
 }
 
-.hamburger-btn:focus,
-.add-btn:focus {
-  outline: 2px solid #ffffff;
-  outline-offset: 2px;
-}
 
 .req {
   display: flexbox;
