@@ -41,7 +41,7 @@ oauth = OAuth(app)
 facebook = oauth.register(
     name='facebook',
     client_id=os.getenv('FACEBOOK_CLIENT_ID'),
-    client_secret=os.getenv('FACEBOOK_CLIENT_ID'),
+    client_secret=os.getenv('FACEBOOK_CLIENT_SECRET'),
     authorize_url='https://www.facebook.com/v14.0/dialog/oauth',
     authorize_params=None,
     access_token_url='https://graph.facebook.com/v14.0/oauth/access_token',
@@ -50,6 +50,8 @@ facebook = oauth.register(
     refresh_token_params=None,
     client_kwargs={'scope': 'email'},
 )
+print(os.getenv('FACEBOOK_CLIENT_ID'))
+os.getenv('FACEBOOK_CLIENT_SECRET')
 
 
 @app.route('/')
