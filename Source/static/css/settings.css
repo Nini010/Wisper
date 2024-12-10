@@ -117,43 +117,8 @@ nav a:hover {
   margin-top: 10%;
 }
 
-/* input,
-select {
-  width: 100%;
-  border-radius: 0.5rem;
-  margin: 2% 2%;
-  background-color: #1B1A55;
-  border: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 2%;
-
-}
-
-label {
-  display: block;
-  text-align: left;
-  margin-bottom: 8px;
-}
 
 .signin-btn {
-  background-color: #535C91;
-  color: white;
-  padding: 2% 3%;
-  font-size: 100%;
-  border: none;
-  border-radius: 4px;
-  margin: 0;
-  margin-top: 3%;
-  width: 200px;
-  height: 50px;
-  cursor: pointer;
-}
-
-.signin:hover {
-  background-color: rgb(0, 0, 0);
-} */
-
-.signup-btn {
   display: grid;
   grid-template-rows: 50% 50%;
   justify-content: center;
@@ -204,4 +169,32 @@ label {
 
 .btn-fb:hover {
   background-color: #f1f1f1;
+}
+
+/*Notifications page*/
+.notif-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+  gap: 6px;
+  vertical-align: center;
+  margin-top: 10px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.notif-btn {
+  width: 100%;
+  border-radius: 25px;
+  border: none;
+  background-color: #535C91;
+  color: #dfdefe;
+  padding: 3%;
+  height: 40px;
+}
+
+.notif-btn:hover {
+  background-color: #383e60;
+  cursor: pointer;
+  box-shadow: 2px 1px 2px 1px rgba(255, 255, 255, 0.277);
 }
