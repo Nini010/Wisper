@@ -4,8 +4,8 @@ from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 import google.auth.transport.requests
 from authlib.integrations.flask_client import OAuth
-import os
 import sqlite3
+import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -35,8 +35,6 @@ flow = Flow.from_client_config(
     scopes=["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile", "openid"]
 )
 
-app.secret_key = os.urandom(24)
-
 oauth = OAuth(app)
 facebook = oauth.register(
     name='facebook',
@@ -50,9 +48,97 @@ facebook = oauth.register(
     refresh_token_params=None,
     client_kwargs={'scope': 'email'},
 )
-print(os.getenv('FACEBOOK_CLIENT_ID'))
-os.getenv('FACEBOOK_CLIENT_SECRET')
 
+# connection = sqlite3.connect("profile.db",)
+
+def create_tables():
+    connection = sqlite3.connect("profile.db")
+    cursor = connection.cursor()
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS profiles (
+        username TEXT UNIQUE NOT NULL, 
+        email TEXT NOT NULL UNIQUE, 
+        name TEXT, 
+        friends TEXT, 
+        posts BLOB, 
+        number INTEGER, 
+        dob TEXT
+    )
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS chats (
+        id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, 
+        sender TEXT NOT NULL, 
+        receiver TEXT NOT NULL, 
+        text TEXT, 
+        blob BLOB,
+        FOREIGN KEY (sender) REFERENCES profiles(username),
+        FOREIGN KEY (receiver) REFERENCES profiles(username)
+    )
+    """)
+    
+    connection.commit()
+
+def insert_profile(name, email, username='hiii', number=0, dob='0', friends=''):
+    connection = sqlite3.connect("profile.db")
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+        INSERT INTO profiles (username, name, email, number, dob, friends)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """, (username, name, email, number, dob, friends))
+        connection.commit()
+        print(f"Profile for {username} added successfully.")
+    except sqlite3.IntegrityError as e:
+        print(f"Error inserting profile: {e}")
+
+def insert_chat(sender, receiver, text, blob=None):
+    connection = sqlite3.connect("profile.db")
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+        INSERT INTO chats (sender, receiver, text, blob)
+        VALUES (?, ?, ?, ?)
+        """, (sender, receiver, text, blob))
+        connection.commit()
+        print(f"Chat from {sender} to {receiver} added successfully.")
+    except sqlite3.IntegrityError as e:
+        print(f"Error inserting chat: {e}")
+
+def chats_list(username):
+    connection = sqlite3.connect("profile.db")
+    cursor = connection.cursor()
+    
+    query = """
+    SELECT sender, sender_username, receiver, receiver_username
+    FROM chats
+    WHERE (sender LIKE ? OR receiver LIKE ?)
+    AND (sender != ? AND receiver != ?);
+    """
+    
+    search_pattern = f"%{username}%"
+    
+    cursor.execute(query, (search_pattern, search_pattern, username, username))    
+    results = cursor.fetchall()
+    
+    chats = {}
+    i = 0
+    for sender, sender_username, receiver, receiver_username in results:
+        # Map sender to sender_username if not already in the dictionary
+        if sender not in chats:
+            chats[i] = {'name':sender,'username':sender_username}
+            i = i + 1
+        # Map receiver to receiver_username if not already in the dictionary
+        if receiver not in chats:
+            chats[i] = {'name':receiver, 'username':receiver_username}
+            i = i + 1
+    
+    connection.close()
+    return chats
+
+create_tables()
 
 @app.route('/')
 def index():
@@ -91,19 +177,19 @@ def callback():
         )
         session['email'] = id_info.get('email')
         session['name'] = id_info.get('name')
-        
-        # Connect to the database
-        conn = sqlite3.connect("profile.db")
-        cursor = conn.cursor()
-        
-        cursor.execute("SELECT 1 FROM profiles WHERE email = ? LIMIT 1;", (session['email'],))
 
-        # Check if the email exists
+        print(f"User {session['name']} logged in successfully.")
+        print(f"Email: {session['email']}")
+        
+        connection = sqlite3.connect("profile.db")
+        cursor = connection.cursor()      
+        cursor.execute("SELECT 1 FROM profiles WHERE email = ? LIMIT 1;", (id_info.get('email'),))
         result = cursor.fetchone()
 
         if not result:
-            cursor.execute("INSERT INTO profiles (email, username) VALUES (?, ?);", (session['email'], session['name']))
-            conn.commit()
+            insert_profile(session['name'], session['email'], "hiii", 0, "0", "0")
+
+        
         return redirect(url_for('chats'))
     except Exception as e:
         flash(f"An error occurred during authentication: {str(e)}")
@@ -115,19 +201,20 @@ def DM():
 
 @app.route('/chats')
 def chats():
+    chats_list(session.get('email'))
     return render_template('chats.html')
 
 @app.route('/settings')
 def settings():
     return render_template('settings.html')
     
+@app.route('/settings/edit')
+def edit():
+    return render_template('EditProfile.html')
+
 @app.route('/search')
 def search():
     return render_template('Search.html')
-
-@app.route('/edit')
-def edit():
-    return render_template('EditProfile.html')
 
 @app.route('/profile')
 def profile():
