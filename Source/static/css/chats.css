@@ -226,7 +226,7 @@ p {
   grid-template-columns: 20% 20% 20% 20% 20%;
   border-top: 2px solid #9290C3;
   height: 60px;
-  background-color: transparent;
+  background-color: #070F2B;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -249,4 +249,108 @@ p {
   font-size: 1rem;
   color: #aaaaaa;
   margin-bottom: 0%;
+}
+
+/*Profile page*/
+.profile-portion {
+  display: flexbox;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: transparent;
+  height: 35%;
+  width: 100%;
+}
+
+.profile-container {
+  display: grid;
+  grid-template-columns: 31% 30% 30%;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+  height: 30%;
+  background-color: transparent;
+  justify-content: space-between;
+}
+
+.counter {
+  display: flex;
+  justify-content: end;
+  flex-direction: column;
+  align-items: center;
+}
+
+.counter,
+h3,
+h5 {
+  margin: 0;
+  margin-bottom: 1%;
+}
+
+.profile-img-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  justify-content: start;
+}
+
+.profileimg {
+  display: flex;
+  width: 75%;
+  height: 100%;
+  border: none;
+  border-radius: 50%;
+  margin: 0;
+  justify-content: start;
+}
+
+.u-name {
+  padding: 10px;
+  padding-top: 0;
+  padding-bottom: 5px;
+  padding-left: 0;
+
+}
+
+.name {
+  font-size: large;
+  color: #9290C3;
+}
+
+.user {
+  font-size: 11px;
+  color: #737293;
+}
+
+.edit-btn {
+  width: 100%;
+  border-radius: 25px;
+  border: none;
+  background-color: #535C91;
+  color: #bab8eb;
+  padding: 3%;
+}
+
+.posts-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 5px 5px;
+}
+
+.post {
+  display: flex;
+  justify-content: center;
+  width: 98%;
+  height: 98%;
+  object-fit: contain;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.bio {
+  margin-bottom: 6%;
+  padding-left: 10px;
 }
