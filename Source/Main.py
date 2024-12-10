@@ -129,9 +129,9 @@ def search():
 def edit():
     return render_template('EditProfile.html')
 
-@app.route('/addpost')
-def addPost():
-    return "This is the Add Post page (placeholder)."
+@app.route('/profile')
+def profile():
+    return render_template('Profilepage.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=('ssl.crt', 'ssl.key'))

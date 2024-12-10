@@ -28,6 +28,7 @@
         <!--Footer-->
         <footer>
             <div class="Nav-opt" id="footer">
+            <a href="{{ url_for('profile') }}" class="profile-link">
                 <div class="profile-page icon-container ">
                     <button class="n-btn">
                         <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
@@ -40,6 +41,7 @@
                         </svg>
                     </button>
                 </div>
+            </a>
 
                 <a href="{{ url_for('search') }}" class="search-link">
                     <div class="search-page icon-container">
@@ -57,7 +59,8 @@
                         </button>
                     </div>
                 </a>
-                <!--<a href="{{ url_for('addPost') }}" class="add-link">-->
+
+               
                 <div class="addPost icon-container">
                     <button class="n-btn" type="button">
                         <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +79,6 @@
                         </svg>
                     </button>
                 </div>
-                <!--</a>-->
 
                 <div class="notifs icon-container">
                     <button class="n-btn">
@@ -88,6 +90,7 @@
                     </button>
                 </div>
 
+                <a href="{{ url_for('chats') }}" class="search-link">
                 <div class="home icon-container">
                     <button class="n-btn">
                         <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
@@ -100,6 +103,7 @@
                         </svg>
                     </button>
                 </div>
+                </a>
 
             </div>
         </footer>
