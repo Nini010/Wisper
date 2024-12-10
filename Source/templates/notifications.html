@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="notif-container">
+    <!-- <a href="{{ url_for('chats') }}">
+      <div class="btc">
+        <button class="btn back" type="button" id="backtochat">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#9290C3" class="bi bi-arrow-left-circle" viewBox="0 0 17 17">
+          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+        </svg>
+      </button>
+      </div>
+      </a>-->
+      <div class="Sent">
+        <button class="notif-btn">Sent</button>
+      </div>
+      <div class="received">
+        <button class="notif-btn">Received</button>
+      </div>
+</div>
+<div class="notif-panes">
+  <div class="accounts">
+    <div class="dp">
+      <img class="pfp" src="static/images/pfp.jpg">
+    </div>
+    <a href="{{ url_for('DM') }}" class="dm-link">
+      <div class="account-info">
+        <p class="name">Oliver</p>
+        <p class="username">usernames</p>
+      </div>
+    </a>
+  </div>
+</div>
+</div>
+{% endblock %}

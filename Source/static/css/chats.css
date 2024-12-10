@@ -328,8 +328,15 @@ h5 {
   border-radius: 25px;
   border: none;
   background-color: #535C91;
-  color: #bab8eb;
+  color: #dfdefe;
   padding: 3%;
+  height: 50px;
+}
+
+.edit-btn:hover {
+  background-color: #383e60;
+  cursor: pointer;
+  box-shadow: 2px 1px 2px 1px rgba(255, 255, 255, 0.277);
 }
 
 .posts-container {

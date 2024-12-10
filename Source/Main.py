@@ -133,5 +133,9 @@ def edit():
 def profile():
     return render_template('Profilepage.html')
 
+@app.route('/notification')
+def notification():
+    return render_template('notifications.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=('ssl.crt', 'ssl.key'))
