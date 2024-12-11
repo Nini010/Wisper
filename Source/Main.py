@@ -58,7 +58,7 @@ def create_tables():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS profiles (
         username TEXT UNIQUE NOT NULL, 
-        email TEXT NOT NULL UNIQUE, 
+        email TEXT UNIQUE NOT NULL, 
         name TEXT, 
         friends TEXT, 
         posts BLOB, 
@@ -81,62 +81,102 @@ def create_tables():
     
     connection.commit()
 
-def insert_profile(name, email, username='hiii', number=0, dob='0', friends=''):
+def insert_profile(name, email, username = 'hiii', number  = None, dob = None):
     connection = sqlite3.connect("profile.db")
     cursor = connection.cursor()
     try:
         cursor.execute("""
         INSERT INTO profiles (username, name, email, number, dob, friends)
         VALUES (?, ?, ?, ?, ?, ?)
-        """, (username, name, email, number, dob, friends))
+        """, (username, name, email, number, dob, None))
         connection.commit()
         print(f"Profile for {username} added successfully.")
     except sqlite3.IntegrityError as e:
         print(f"Error inserting profile: {e}")
 
-def insert_chat(sender, receiver, text, blob=None):
-    connection = sqlite3.connect("profile.db")
-    cursor = connection.cursor()
-    try:
-        cursor.execute("""
-        INSERT INTO chats (sender, receiver, text, blob)
-        VALUES (?, ?, ?, ?)
-        """, (sender, receiver, text, blob))
-        connection.commit()
-        print(f"Chat from {sender} to {receiver} added successfully.")
-    except sqlite3.IntegrityError as e:
-        print(f"Error inserting chat: {e}")
-
 def chats_list(username):
-    connection = sqlite3.connect("profile.db")
-    cursor = connection.cursor()
-    
-    query = """
-    SELECT sender, sender_username, receiver, receiver_username
-    FROM chats
-    WHERE (sender LIKE ? OR receiver LIKE ?)
-    AND (sender != ? AND receiver != ?);
-    """
-    
-    search_pattern = f"%{username}%"
-    
-    cursor.execute(query, (search_pattern, search_pattern, username, username))    
-    results = cursor.fetchall()
-    
-    chats = {}
-    i = 0
-    for sender, sender_username, receiver, receiver_username in results:
-        # Map sender to sender_username if not already in the dictionary
-        if sender not in chats:
-            chats[i] = {'name':sender,'username':sender_username}
-            i = i + 1
-        # Map receiver to receiver_username if not already in the dictionary
-        if receiver not in chats:
-            chats[i] = {'name':receiver, 'username':receiver_username}
-            i = i + 1
-    
-    connection.close()
-    return chats
+    try:
+        # Connect to the SQLite database
+        connection = sqlite3.connect('profile.db')
+        cursor = connection.cursor()
+
+        # SQL query to find the latest message for each unique username
+        query = """
+        SELECT sender, sender_username, receiver, receiver_username, text
+        FROM chats
+        WHERE id IN (
+            SELECT MAX(id) 
+            FROM chats
+            WHERE sender_username = ? OR receiver_username = ?
+            GROUP BY 
+                CASE 
+                    WHEN sender_username = ? THEN receiver_username 
+                    ELSE sender_username 
+                END
+        )
+        ORDER BY id DESC
+        """
+
+        # Execute the query with the username
+        cursor.execute(query, (username, username, username))
+
+        # Fetch all matching rows
+        rows = cursor.fetchall()
+
+        # Transform rows into a list of dictionaries
+        results = []
+        for row in rows:
+            if row[1] == username:
+                results.append({
+                    "name": row[2],
+                    "username": row[3],
+                    "text": row[4],
+                })
+            else:
+                results.append({
+                    "name": row[0],
+                    "username": row[1],
+                    "text": row[4],
+                })
+
+        return results
+    except sqlite3.Error as e:
+        print(f"SQLite error: {e}")
+        return []
+    finally:
+        if connection:
+            connection.close()
+
+def chats(username, recipient_username):
+    try:
+        connection = sqlite3.connect('profile.db')
+        cursor = connection.cursor()
+
+        query = """
+        SELECT sender, sender_username, text, blob
+        FROM chats
+        WHERE ((sender_username = ? AND receiver_username = ?) OR (sender_username = ? AND receiver_username = ?))
+        ORDER BY id DESC
+        """
+
+        cursor.execute(query,(username, recipient_username, recipient_username, username))
+        rows = cursor.fetchall()
+        chats = []
+        for row in rows:
+            chats.append({
+                "sender": row[0],
+                "sender_username" : row[1],
+                "text" : row[2],
+                "blob" : row[3]
+
+            })
+        return chats
+    except sqlite3.Error as e:
+        print(f"SQLite error: {e}")
+        return []
+    finally:
+        if connection:
+            connection.close()
 
 create_tables()
 
@@ -158,6 +198,33 @@ def loginWithGoogle():
         flash(f"An error occurred while initiating login: {str(e)}")
         return redirect(url_for('index'))
 
+@app.route('/loginWithFacebook')
+def loginWithFacebook():
+    # Redirect the user to Facebook for authorization
+    redirect_uri = url_for('FB_auth_callback', _external=True)
+    return facebook.authorize_redirect(redirect_uri)
+
+@app.route('/FB_auth_callback')
+def FB_auth_callback():
+    # Retrieve the access token
+    token = facebook.authorize_access_token()
+
+    # Use the token to fetch user information from Facebook
+    resp = facebook.get('https://graph.facebook.com/me?fields=id,name,email', token=token)
+    user = resp.json()
+
+    # Save the user information in the session
+    session['email'] = user.get('email')
+    session['name'] = user.get('name')
+
+    connection = sqlite3.connect("profile.db")
+    cursor = connection.cursor()      
+    cursor.execute("SELECT 1 FROM profiles WHERE email = ? LIMIT 1;", (user.get('email'),))
+    result = cursor.fetchone()
+    if not result:
+        insert_profile(session['name'], session['email'], "hiii")
+    return redirect(url_for('chats'))
+
 @app.route('/auth_callback')
 def callback():
     if 'state' not in session:
@@ -177,9 +244,6 @@ def callback():
         )
         session['email'] = id_info.get('email')
         session['name'] = id_info.get('name')
-
-        print(f"User {session['name']} logged in successfully.")
-        print(f"Email: {session['email']}")
         
         connection = sqlite3.connect("profile.db")
         cursor = connection.cursor()      
@@ -187,7 +251,7 @@ def callback():
         result = cursor.fetchone()
 
         if not result:
-            insert_profile(session['name'], session['email'], "hiii", 0, "0", "0")
+            insert_profile(session['name'], session['email'], "hiii")
 
         
         return redirect(url_for('chats'))
@@ -201,7 +265,6 @@ def DM():
 
 @app.route('/chats')
 def chats():
-    chats_list(session.get('email'))
     return render_template('chats.html')
 
 @app.route('/settings')
