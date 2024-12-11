@@ -12,39 +12,39 @@
 </head>
 
 <body>
-    <!--Main content-->
-    <div class="container-signin">
-      <h1 class="sign-in heading">Sign In:</h1>
-      <form action="#" method="post">
-        <!-- <label for="Uname"><b>Username:</b></label>
+  <!--Main content-->
+  <div class="container-signin">
+    <h1 class="sign-in heading">Sign In:</h1>
+    <form action="#" method="post">
+      <!-- <label for="Uname"><b>Username:</b></label>
           <input type="text" id="firstName" name="firstName" required placeholder="Enter Username">
           <br> -->
-        <!-- <button id="signin" class="signin-btn" type="signin">Sign In</button><br> -->
+      <!-- <button id="signin" class="signin-btn" type="signin">Sign In</button><br> -->
 
-        <div class="signin-btn">
-          <div class="google">
-            <a href="{{ url_for('loginWithGoogle') }}" class="btn btn-google">
-              <div class="logo-img">
-                <img src=" https://www.svgrepo.com/show/475656/google-color.svg" style="width:28px">
-              </div>
-              <div class="head g">
-                Sign in with Google
-              </div>
-            </a>
-          </div>
-          <div class="fb">
-            <button class="btn btn-fb">
-              <div class="logo-img fb">
-                <img src=" static\images\fb-logo.svg" style="width:33px">
-              </div>
-              <div class="head f">
-                Sign in with Facebook
-              </div>
-            </button>
-          </div>
+      <div class="signin-btn">
+        <div class="google">
+          <a href="{{ url_for('loginWithGoogle') }}" class="btn btn-google">
+            <div class="logo-img">
+              <img src=" https://www.svgrepo.com/show/475656/google-color.svg" style="width:28px">
+            </div>
+            <div class="head g">
+              Sign in with Google
+            </div>
+          </a>
         </div>
-      </form>
-    </div>
+        <div class="fb">
+          <a href="{{ url_for('loginWithFacebook') }}" class="btn btn-fb">
+            <div class="logo-img fb">
+              <img src=" static\images\fb-logo.svg" style="width:33px">
+            </div>
+            <div class="head f">
+              Sign in with Facebook
+            </div>
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
   </div>
 </body>
 

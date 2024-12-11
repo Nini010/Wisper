@@ -1,53 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wisper</title>
-    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wisper</title>
+
   <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="static\css\chats.css">
-    <link rel="stylesheet" href="static\css\settings.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
 </head>
+
 <body>
   <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <nav>
-        <div class="container banner">
-          <a href="{{ url_for('settings') }}">
-            <div class="btc">
-              <button class="btn back" type="button" id="backtochat">
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#9290C3" class="bi bi-arrow-left-circle" viewBox="0 0 17 17">
-                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
-              </svg>
-            </button>
-            </div>
-            </a>
-              <div class="title">
-                <h1>Edit Profile</h1>
-              </div>
+  <nav>
+    <div class="container banner">
+      <a href="{{ url_for('settings') }}">
+        <div class="btc">
+          <button class="btn back" type="button" id="backtochat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#9290C3"
+              class="bi bi-arrow-left-circle" viewBox="0 0 17 17">
+              <path fill-rule="evenodd"
+                d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+            </svg>
+          </button>
         </div>
-    </nav>
+      </a>
+      <div class="title">
+        <h1>Edit Profile</h1>
+      </div>
+    </div>
+  </nav>
 
-    <main class="container">
-        <div class="editP-card">
-            <ul class="edit-list" type="none">
-              <li><a class="list-item editP" href="#">Display name</a><br>
-              <label for="display name" class="usernameS">username</label><br>
-              <input type="text" class="input" name="display name"placeholder="da1sy._."></input>
-              </li>
-              <li><a class="list-item editP" href="#">DOB</a>
-                <input type="date" class="input" name="date" placeholder="mm/dd/yyyy"></input>
-              </li>
-              <li><a class="list-item editP" href="#">Email</a></li>
-              <li>
-                <a class="list-item editP" href="#">Phone no.</a><br>
-                <input type="text" class="input" name="Phone Number" pattern="/^+92(7\d|8\d|9\d)\d{9}$/" placeholder="03XX XXXXXXX"></input>
-              </li>
-              <li><a class="list-item editP" href="#">Privacy</a></li>
-              <li><a class="list-item editP" href="#">Log Out</a></li>
-              <li><a class="list-item editP" href="#">Delete Account</a></li>
-            </ul>
-        </div>
-    </main>
+  <main class="container">
+    <div class="editP-card">
+      <ul class="edit-list" type="none">
+        <li><a class="list-item editP" href="#">Display name</a><br>
+          <label for="display name" class="usernameS">username</label><br>
+          <input type="text" class="input" name="display name" placeholder="da1sy._."></input>
+        </li>
+        <li><a class="list-item editP" href="#">DOB</a>
+          <input type="date" class="input" name="date" placeholder="mm/dd/yyyy"></input>
+        </li>
+        <li><a class="list-item editP" href="#">Email</a></li>
+        <li>
+          <a class="list-item editP" href="#">Phone no.</a><br>
+          <input type="text" class="input" name="Phone Number" pattern="/^+92(7\d|8\d|9\d)\d{9}$/"
+            placeholder="03XX XXXXXXX"></input>
+        </li>
+        <li><a class="list-item editP" href="#">Privacy</a></li>
+        <li><a class="list-item editP" href="#">Log Out</a></li>
+        <li><a class="list-item editP" href="#">Delete Account</a></li>
+      </ul>
+    </div>
+  </main>
 </body>
+
 </html>
