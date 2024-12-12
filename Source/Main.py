@@ -37,7 +37,7 @@ flow = Flow.from_client_config(
 
 oauth = OAuth(app)
 facebook = oauth.register(
-    name='facebook',
+    name='facebook',    
     client_id=os.getenv('FACEBOOK_CLIENT_ID'),
     client_secret=os.getenv('FACEBOOK_CLIENT_SECRET'),
     authorize_url='https://www.facebook.com/v14.0/dialog/oauth',
@@ -286,6 +286,10 @@ def profile():
 @app.route('/notification')
 def notification():
     return render_template('notifications.html')
+
+@app.route('/profileinfo')
+def profileinfo():
+    return render_template('ProfileInfo.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=('ssl.crt', 'ssl.key'))
