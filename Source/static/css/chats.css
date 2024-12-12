@@ -27,6 +27,30 @@ body {
   border-bottom: 2px solid #9290C3;
 }
 
+
+
+/* Specific styles for the settings page */
+.header-settings {
+  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 15%;
+}
+
+.settings-right {
+  margin-left: auto;
+}
+
+.bi-gear {
+  margin-left: 5px;
+  margin-top: 5px;
+  padding: 0;
+}
+
+.settings-btn {
+  margin-right: 5px;
+}
+
+
 /* App Name */
 .appName {
   display: flex;
@@ -148,12 +172,6 @@ body {
   text-decoration: none;
 }
 
-.gear-icon {
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .add-heading {
   display: block;
@@ -217,9 +235,7 @@ p {
   font-size: 1.5rem;
 }
 
-.bi-gear {
-  margin-bottom: 2px;
-}
+
 
 .Nav-opt {
   display: grid;
@@ -372,6 +388,6 @@ h5 {
 }
 
 .bio {
-  margin-bottom: 6%;
+  margin-bottom: 8%;
   padding-left: 10px;
 }
