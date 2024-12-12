@@ -24,8 +24,11 @@ h1 {
   text-decoration: none;
   color: #9290C3;
   padding: 2%;
-  font-size: 1.5rem;
-  line-height: 1.6;
+  font-size: 1.2rem;
+  line-height: 2rem;
+  border-bottom: 1px solid #9290C3;
+  width: 100%;
+  display: block;
 }
 
 .list-item:hover {
@@ -66,6 +69,23 @@ nav a:hover {
 }
 
 /*Edit Profile styles:*/
+.container {
+  max-width: 100%;
+  width: 100%;
+  justify-content: left;
+  display: block;
+}
+
+.ltg {
+  text-decoration: none;
+  color: white;
+}
+
+.existing-username {
+  padding-left: 2%;
+  color: #767575;
+}
+
 .input {
   border-radius: 0.5rem;
   margin: 2% 2%;
@@ -73,6 +93,8 @@ nav a:hover {
   border: none;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 2%;
+  color: #9d9bc1;
+  width: 100%;
 }
 
 .input:active {
@@ -80,7 +102,7 @@ nav a:hover {
 }
 
 .input::placeholder {
-  color: #9290C3;
+  color: #9d9bc1;
 }
 
 .banner {
@@ -96,6 +118,19 @@ nav a:hover {
   display: flex;
   justify-content: center;
 
+}
+
+.edit-dp-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-dp {
+
+  border-radius: 100px;
+  height: 100px;
 }
 
 /*Sign Up*/
@@ -181,6 +216,7 @@ nav a:hover {
   margin-top: 10px;
   padding-right: 10px;
   padding-left: 10px;
+  margin-bottom: 2%;
 }
 
 .notif-btn {
@@ -197,4 +233,28 @@ nav a:hover {
   background-color: #383e60;
   cursor: pointer;
   box-shadow: 2px 1px 2px 1px rgba(255, 255, 255, 0.277);
+}
+
+/*initial input*/
+.info-container {
+  max-width: 100%;
+  width: 100%;
+  justify-content: center;
+  display: block;
+}
+
+.position {
+  display: flex;
+  justify-items: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2%;
+}
+
+.y {
+  line-height: 25px;
+}
+
+.continue-btn {
+  margin-top: 5%;
 }
