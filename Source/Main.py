@@ -261,35 +261,40 @@ def callback():
 
 @app.route('/dm')
 def DM():
-    return render_template('DMs.html')
+    return render_template('DMs.html', page='dm')
 
 @app.route('/chats')
 def chats():
-    return render_template('chats.html')
+    users = [
+        {'name': 'Oliver', 'profile_pic': 'static/images/pfp.jpg'},
+        {'name': 'John', 'profile_pic': 'static/images/pfp2.jpg'},
+        {'name': 'Jane', 'profile_pic': 'static/images/pfp3.jpg'},
+    ]
+    return render_template('chats.html', page='home', users=users)
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html')
+    return render_template('settings.html', page='set')
     
 @app.route('/settings/edit')
 def edit():
-    return render_template('EditProfile.html')
+    return render_template('EditProfile.html', page='edit')
 
 @app.route('/search')
 def search():
-    return render_template('Search.html')
+    return render_template('Search.html', page='search')
 
 @app.route('/profile')
 def profile():
-    return render_template('Profilepage.html')
+    return render_template('Profilepage.html', page='settings')
 
 @app.route('/notification')
 def notification():
-    return render_template('notifications.html')
+    return render_template('notifications.html', page='notif')
 
 @app.route('/profileinfo')
 def profileinfo():
-    return render_template('ProfileInfo.html')
+    return render_template('ProfileInfo.html', page='profileinfo')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=('ssl.crt', 'ssl.key'))

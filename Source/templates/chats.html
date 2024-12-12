@@ -18,17 +18,21 @@
   </button>
 </div>
 <!--Friend profiles-->
+{% for user in users %}
 <div class="acc">
+  
   <div class="accounts">
     <div class="dp">
-      <img class="pfp" src="static/images/pfp.jpg">
+      <img class="pfp" src="{{ user.profile_pic }}">
     </div>
     <a href="{{ url_for('DM') }}" class="dm-link">
       <div class="account-info">
-        <p class="name">Oliver</p>
+        <p class="name">{{ user.name }}</p>
       </div>
     </a>
   </div>
 </div>
+
 </div>
+{% endfor %}
 {% endblock %}
