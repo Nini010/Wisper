@@ -1,11 +1,3 @@
-.bg {
-  background-color: #1e1f22;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
 .dm-header {
   justify-content: flex-start;
   display: grid;
