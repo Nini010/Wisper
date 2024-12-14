@@ -29,7 +29,7 @@ def chats():
 def settings():
     return render_template('settings.html', page='set')
     
-@app.route('/settings/edit')
+@app.route('/edit')
 def edit():
     return render_template('EditProfile.html', page='edit')
 

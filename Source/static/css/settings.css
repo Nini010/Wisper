@@ -218,25 +218,6 @@ nav a:hover {
   margin-bottom: 2%;
 }
 
-/* .notif-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  border-radius: 25px;
-  border: none;
-  background-color: #535C91;
-  color: #dfdefe;
-  padding: 3%;
-  height: 40px;
-}
-
-.notif-btn:hover {
-  background-color: #383e60;
-  cursor: pointer;
-  box-shadow: 2px 1px 2px 1px rgba(255, 255, 255, 0.277);
-} */
-
 .notif-btn {
   display: flex;
   align-items: center;
@@ -272,7 +253,7 @@ nav a:hover {
   justify-items: center;
   flex-direction: column;
   align-items: center;
-  margin-top: 2%;
+  margin-top: 2%
 }
 
 .y {
@@ -281,4 +262,8 @@ nav a:hover {
 
 .continue-btn {
   margin-top: 5%;
+}
+
+.editP {
+  border: none;
 }
