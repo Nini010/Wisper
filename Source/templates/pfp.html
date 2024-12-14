@@ -4,9 +4,9 @@
 {% block content %}
 <div class="profile-portion">
   <div class="profile-container">
-
+    
     <div class="dp profile-img-container">
-      <img class="profileimg" src="static/images/uploads/profile_pics/{{ pfp }}">
+      <img class="profileimg" src="static/images/pfp.jpg">
 
     </div>
 
@@ -21,18 +21,16 @@
     </div>
 
     <div class="u-name">
-      <p class="name">{{ name }}</p>
+      <p class="name">Name</p>
     </div>
 
   </div>
   <div class="bio">
     <h6>Bio .......................</h6>
   </div>
-  <a href="{{ url_for('edit') }}" class="link edit-settings-link">
   <div class="edit-profile">
-    <button class="edit-btn" >Edit Profile</button>
+    <button class="edit-btn">Send Message</button>
   </div>
-</a>
 </div>
 <div class="posts-container">
   <div>

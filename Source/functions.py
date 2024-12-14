@@ -12,7 +12,9 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+print(CLIENT_ID)
 CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+print(CLIENT_SECRET)
 REDIRECT_URI = "https://127.0.0.1:5000/auth_callback"
 UPLOAD_FOLDER = 'uploads/profile_pics'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
