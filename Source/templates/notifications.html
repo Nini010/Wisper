@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script src="{{ url_for('static', filename='js/requests.js') }}"></script>
 <div class="notif-container">
   <!-- <a href="{{ url_for('chats') }}">
       <div class="btc">
@@ -12,10 +13,10 @@
       </div>
       </a>-->
   <div class="Sent">
-    <button class="notif-btn">Sent</button>
+    <button class="notif-btn" id="sentButton">Sent</button>
   </div>
   <div class="received">
-    <button class="notif-btn">Received</button>
+    <button class="notif-btn" id="receivedButton">Received</button>
   </div>
 </div>
 <div class="notif-panes">
