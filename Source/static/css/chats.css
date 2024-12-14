@@ -36,6 +36,10 @@ body {
   grid-template-columns: 1fr 15%;
 }
 
+.settings-title {
+  padding-left: 64px;
+}
+
 .settings-right {
   margin-left: auto;
 }
@@ -65,6 +69,23 @@ body {
   font-family: 'josephsophia', Arial, Helvetica, sans-serif;
 }
 
+/*Search offcanvas*/
+.offcanvas.offcanvas-bottom {
+  height: 100%;
+  max-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  background-color: #070F2B;
+}
+
+.bi-x-lg {
+  font-weight: bold;
+}
+
+.close-btn {
+  background-color: transparent;
+  border: none;
+}
 
 /* Search Bar */
 .search-container {
@@ -172,6 +193,9 @@ body {
   text-decoration: none;
 }
 
+.link {
+  text-decoration: none;
+}
 
 .add-heading {
   display: block;
