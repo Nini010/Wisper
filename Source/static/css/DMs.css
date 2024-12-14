@@ -183,3 +183,7 @@ body {
   align-content: center;
   justify-content: center;
 }
+
+.receive-chats .send-chats {
+  border-radius: 100px;
+}

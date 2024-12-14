@@ -33,9 +33,9 @@ def settings():
 def edit():
     return render_template('EditProfile.html', page='edit')
 
-@app.route('/search')
-def search():
-    return render_template('Search.html', page='search')
+@app.route('/myprofile')
+def myprofile():
+    return render_template('my-pfp.html', page='settings')
 
 @app.route('/profile')
 def profile():
