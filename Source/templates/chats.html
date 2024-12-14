@@ -20,12 +20,12 @@
 <!--Friend profiles-->
 {% for user in users %}
 <div class="acc">
-  
+
   <div class="accounts">
     <div class="dp">
       <img class="pfp" src="{{ user.profile_pic }}">
     </div>
-    <a href="{{ url_for('DM') }}" class="dm-link">
+    <a href="{{ url_for('DM', username=user.username) }}" class="dm-link">
       <div class="account-info">
         <p class="name">{{ user.name }}</p>
       </div>
