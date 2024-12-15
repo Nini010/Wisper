@@ -6,18 +6,19 @@ import google.auth.transport.requests
 from authlib.integrations.flask_client import OAuth
 from werkzeug.utils import secure_filename
 import os
+import glob
+import uuid
 import sqlite3
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
-print(CLIENT_ID)
 CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
-print(CLIENT_SECRET)
 REDIRECT_URI = "https://127.0.0.1:5000/auth_callback"
-UPLOAD_FOLDER = 'uploads/profile_pics'
+UPLOAD_FOLDER = 'static/images/uploads/profile_pics'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -57,7 +58,7 @@ def create_tables():
     
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS profiles (
-        profile_pic TEXT
+        profile_pic TEXT,
         username TEXT UNIQUE NOT NULL, 
         email TEXT UNIQUE NOT NULL, 
         name TEXT, 
@@ -71,8 +72,8 @@ def create_tables():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS chats (
         id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, 
-        sender TEXT NOT NULL, 
-        receiver TEXT NOT NULL, 
+        sender_username TEXT NOT NULL, 
+        receiver_username TEXT NOT NULL, 
         text TEXT, 
         blob BLOB,
         FOREIGN KEY (sender) REFERENCES profiles(username),
@@ -166,6 +167,10 @@ def get_chats(username, recipient_username):
         if connection:
             connection.close()
 
+def get_posts(username):
+    files = [os.path.basename(file) for file in glob.glob(f"static/images/uploads/posts/{username}-*") if os.path.isfile(file)]
+    return files
+
 @app.route('/addProfile', methods=['POST'])
 def add_profile():
     if request.method == 'POST':
@@ -175,47 +180,105 @@ def add_profile():
         name = session['name']
         email = session['email']
         session['username'] = username
-        session['pfp'] = "pfp.jpg"
+        if session.get('pfp') == None:
+            session['pfp'] = 'pfp.jpg'
+        else:
+            directory = os.path.dirname(session['pfp'])
+            new_file_path = os.path.join(directory, session['username'] + '.jpg')
+            os.rename(session['pfp'], new_file_path)
+            session['pfp'] = session['username'] + '.jpg'
+
         connection = sqlite3.connect("profile.db")
         cursor = connection.cursor()
         try:
             cursor.execute("""
             INSERT INTO profiles (profile_pic, username, name, email, number, dob, friends)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-            """, ("pfp.jpg" ,username, name, email, number, dob, None))
+            """, (session['pfp'], username, name, email, number, dob, None))
             connection.commit()
             return  redirect(url_for('chats'))
         except sqlite3.IntegrityError as e:
             print(f"Error inserting profile: {e}")
 
+def get_profile(username):
+    try:
+        connection = sqlite3.connect('profile.db')
+        cursor = connection.cursor()
+
+        query = """
+        SELECT profile_pic, name, username
+        FROM profiles
+        WHERE username = ?
+        """
+
+        cursor.execute(query, username)
+        rows = cursor.fetchone()
+        if rows == None:
+            print("HIIII")
+        return rows
+    except sqlite3.Error as e:
+        print(f"SQLite error: {e}")
+        return []
+    finally:
+        if connection:
+            connection.close()
+
+def search_profile(username):
+    try:
+        connection = sqlite3.connect('profile.db')
+        cursor = connection.cursor()
+
+        query = """
+        SELECT profile_pic, name, username
+        FROM profiles
+        WHERE (username LIKE ? OR name LIKE ?)
+        """
+
+        cursor.execute(query,('%' + username + '%', '%' + username + '%'))
+        rows = cursor.fetchall()
+        return rows
+    except sqlite3.Error as e:
+        print(f"SQLite error: {e}")
+        return []
+    finally:
+        if connection:
+            connection.close()
+
+@app.route('/search', methods=['POST'])
+def search():
+    username = request.json.get('username', '')
+    results = search_profile(username)
+    # Format results for response
+    profiles = [
+        {"profile_pic": row[0], "name": row[1], "username": row[2]} for row in results
+    ]
+    return jsonify(profiles)
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/upload-profile-picture', methods=['POST'])
-def upload_profile_picture():
-    if 'profile_picture' not in request.files:
-        return jsonify({'success': False, 'message': 'No file part'}), 400
-    
-    file = request.files['profile_picture']
-    
-    if file.filename == '':
-        return jsonify({'success': False, 'message': 'No selected file'}), 400
-    
-    if file and allowed_file(file.filename):
-        filename = session['username'] + str(uuid.uuid4())
-        connection = sqlite3.connect("profile.db")
-        cursor = connection.cursor()
-        cursor.execute("""
-        UPDATE profiles
-        SET pfp = ?
-        WHERE username = ?
-        """,(filepath, session['username']))
-        filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-        file.save(filename)
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'success': False, 'message': 'No file part in the request'}), 400
 
-        return jsonify({'success': True, 'message': 'File uploaded successfully'})
-    
-    return jsonify({'success': False, 'message': 'File type not allowed'}), 400
+    file = request.files['file']
+    current_page = request.form.get('currentPage', '')
+    if current_page == '/profileinfo':
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            session['pfp'] = filepath
+            file.save(filepath)
+            return jsonify({'success': True, 'message': 'File uploaded successfully!'})
+    else:
+        if file and allowed_file(file.filename):
+            filename = session['username'] + "-" + secure_filename(file.filename)
+            filepath = os.path.join("static/images/uploads/posts", filename)
+            file.save(filepath)
+            return jsonify({'success': True, 'message': 'File uploaded successfully!'})
+
+    return jsonify({'success': False, 'message': 'Invalid file type'}), 400
 
 @app.route('/insert_chat', methods=['POST'])
 def insert_chats():
@@ -263,11 +326,11 @@ def FB_auth_callback():
 
     connection = sqlite3.connect("profile.db")
     cursor = connection.cursor()      
-    cursor.execute("SELECT profile_pic username FROM profiles WHERE email = ?", (id_info.get('email'),))
+    cursor.execute("SELECT profile_pic, username FROM profiles WHERE email = ?", (user.get('email'),))
     result = cursor.fetchone()
     
     if not result:
-        return render_template('profileInfo.html')
+        return url_for('profileinfo')
     else:
         session['username'] = result[0]
         session['pfp'] = result[1]
@@ -295,15 +358,15 @@ def callback():
         
         connection = sqlite3.connect("profile.db")
         cursor = connection.cursor()      
-        cursor.execute("SELECT profile_pic username FROM profiles WHERE email = ?", (id_info.get('email'),))
+        cursor.execute("SELECT profile_pic, username FROM profiles WHERE email = ?", (id_info.get('email'),))
         result = cursor.fetchone()
 
         if not result:
-            return render_template('profileInfo.html')
+            return redirect(url_for('profileinfo'))
 
         else:
-            session['username'] = result[0]
             session['pfp'] = result[0]
+            session['username'] = result[1]
             return redirect(url_for('chats'))
 
     except Exception as e:

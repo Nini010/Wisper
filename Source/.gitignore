@@ -3,3 +3,4 @@
 *.crt
 .vscode/*
 profile.db
+__pycache__/*
