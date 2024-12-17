@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="static\css\chats.css">
     <link rel="stylesheet" href="static\css\settings.css">
+    <script src="{{ url_for('static', filename='js/posts_upload.js') }}"></script>
     <title>
         {% block title %}Wisper{% endblock %}
     </title>
@@ -21,27 +22,25 @@
             <p class="appName {% if page == 'settings' %}settings-title{% endif %}">Wisper</p>
             {% block header %}
             {% if page == 'settings' %}
-            
             <div class="settings-right">
-                <a href="{{ url_for('settings') }}" class="link settings-link">
-                <button class="btn settings-btn" >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#9290C3" class="{% if page == 'settings' %}bi bi-gear{% endif %}" viewBox="0 0 20 20">
-                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
-                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
+                <button class="btn settings-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#9290C3"
+                        class="{% if page == 'settings' %}bi bi-gear{% endif %}" viewBox="0 0 20 20">
+                        <path
+                            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
+                        <path
+                            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
                     </svg>
                 </button>
-            </a>
             </div>
-            
-        </div>
-        {% endif %}
-        {% endblock %}
+            {% endif %}
+            {% endblock %}
         </div>
         <main>
             {% block content %}
             <!-- main content here -->
             {% endblock %}
-            
+
         </main>
         <!--Footer-->
         <footer>
@@ -61,79 +60,25 @@
                     </div>
                 </a>
 
-                
-                    <div class="search-page icon-container">
-                        <button class="n-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
-                                aria-label="Search" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="22"
-                                role="img" viewBox="0 0 24 24" width="22">
-                                <title fill="#F5F5F5">Search</title>
-                                <path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="none"
-                                    stroke="#9290C3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px">
-                                </path>
-                                <line fill="none" stroke="#9290C3" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2px" x1="16.511" x2="22" y1="16.511" y2="22"></line>
-                            </svg>
-                        </button>
-                    </div>
-               
-                <!--Offcanvas-->
-                
-                    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
-                    <div class="offcanvas-header">
-                        <h4 class="offcanvas-title" id="offcanvasBottomLabel">Find Friends</h4>
-                        <button type="button" class="close-btn text-reset" data-bs-dismiss="offcanvas" aria-label="Close">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16" >
-                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                              </svg>
-                        </button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <!--Search page-->
-                        <div class="search-container">
-                            <input class="search-bar" type="text" placeholder="Search">
-                            <button class="search-icon">
-                              <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" aria-label="Search"
-                                class="x1lliihq x1n2onr6 x5n08af" fill="#9290C3" height="24" role="img" viewBox="0 0 24 24" width="24">
-                                <title fill="#F5F5F5">Search</title>
-                                <path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="none" stroke="#9290C3" stroke-linecap="round"
-                                  stroke-linejoin="round" stroke-width="2px"></path>
-                                <line fill="none" stroke="#9290C3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2px" x1="16.511"
-                                  x2="22" y1="16.511" y2="22">
-                                </line>
-                              </svg>
-                            </button>
-                          </div>
-                          
-                          <div class="req" id="requests">
-                            <a href="{{ url_for('profile') }}" class="link my-profile-link">
-                            <div class="find-friend">
-                              <div class="dp">
-                                <img class="pfp" src="static/images/pfp.jpg">
-                              </div>
-                              <div class="account-info">
-                                <p class="name">Oliver</p>
-                              </a>
-                              </div>
-                          
-                              <div class="add-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square"
-                                  viewBox="0 0 16 16">
-                                  <path
-                                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                                  <path
-                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                                </svg>
-                              </div>
-                            </div>
-                          </div>
-                        <!--Search page end-->
-                    </div>
-                    </div>
-                <!--Offcanvas end-->
+
+                <div class="search-page icon-container">
+                    <button class="n-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom"
+                        aria-controls="offcanvasBottom">
+                        <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
+                            aria-label="Search" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="22"
+                            role="img" viewBox="0 0 24 24" width="22">
+                            <title fill="#F5F5F5">Search</title>
+                            <path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="none" stroke="#9290C3"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2px">
+                            </path>
+                            <line fill="none" stroke="#9290C3" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2px" x1="16.511" x2="22" y1="16.511" y2="22"></line>
+                        </svg>
+                    </button>
+                </div>
 
                 <div class="addPost icon-container">
-                    <button class="n-btn" type="button">
+                    <button id="addPostBtn" class="n-btn" type="button">
                         <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
                             aria-label="New post" class="x1lliihq x1n2onr6 x5n08af" fill="#9290C3" height="24"
                             role="img" viewBox="0 0 24 24" width="24">
@@ -149,36 +94,138 @@
                                 stroke-width="2px" x1="12.003" x2="12.003" y1="6.545" y2="17.455"></line>
                         </svg>
                     </button>
+                    <input id="file" type="file" style="display:none" />
+                    <img id="preview" src="" alt="Image preview" style="display:none;" />
+                    <div id="message"></div>
                 </div>
+
 
                 <a href="{{ url_for('notification') }}" class="link notification-link">
-                <div class="notifs icon-container">
-                    <button class="n-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#9290C3"
-                            class="bi bi-bell-fill icons" viewBox="0 0 16 16">
-                            <path
-                                d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
-                        </svg>
-                    </button>
-                </div>
-            </a>
-            
-                <a href="{{ url_for('chats') }}" class="link home-link">
-                <div class="home icon-container">
-                    <button class="n-btn">
-                        <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
-                            aria-label="Home" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24"
-                            role="img" viewBox="0 0 24 24" width="24">
-                            <title fill="#9290C3">Home</title>
-                            <path
-                                d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l10-9.543a1.001 1.001 0 0 1 1.38 0l10 9.543a1.002 1.002 0 0 1 .31.724V22a1 1 0 0 1-1 1Z"
-                                fill="#9290C3"></path>
-                        </svg>
-                    </button>
-                </div>
+                    <div class="notifs icon-container">
+                        <button class="n-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#9290C3"
+                                class="bi bi-bell-fill icons" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
+                            </svg>
+                        </button>
+                    </div>
                 </a>
 
+                <a href="{{ url_for('chats') }}" class="link home-link">
+                    <div class="home icon-container">
+                        <button class="n-btn">
+                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
+                                aria-label="Home" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24"
+                                role="img" viewBox="0 0 24 24" width="24">
+                                <title fill="#9290C3">Home</title>
+                                <path
+                                    d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l10-9.543a1.001 1.001 0 0 1 1.38 0l10 9.543a1.002 1.002 0 0 1 .31.724V22a1 1 0 0 1-1 1Z"
+                                    fill="#9290C3"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </a>
+                <!--Offcanvas-->
+
+                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom"
+                    aria-labelledby="offcanvasBottomLabel">
+                    <div class="offcanvas-header">
+                        <h4 class="offcanvas-title" id="offcanvasBottomLabel">Find Friends</h4>
+                        <button type="button" class="close-btn text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                                class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path
+                                    d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <!--Search page-->
+                        <div class="search-container">
+                            <input id="search-bar" class="search-bar" type="text" placeholder="Search"
+                                onkeyup="handleSearch(event)">
+                            <button class="search-icon">
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
+                                    aria-label="Search" class="x1lliihq x1n2onr6 x5n08af" fill="#9290C3" height="24"
+                                    role="img" viewBox="0 0 24 24" width="24">
+                                    <title fill="#F5F5F5">Search</title>
+                                    <path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="none"
+                                        stroke="#9290C3" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2px"></path>
+                                    <line fill="none" stroke="#9290C3" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2px" x1="16.511" x2="22" y1="16.511" y2="22">
+                                    </line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div id="search-results" class="req" id="requests">
+                        </div>
+
+                    </div>
+                </div>
+                <!--Search page end-->
             </div>
+            <!--Offcanvas end-->
+            <script>
+                function handleSearch(event) {
+                    if (event.key === 'Enter') {
+                        const username = document.getElementById('search-bar').value;
+
+                        // Make an AJAX request to the /search endpoint
+                        fetch('/search', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ username: username })
+                        })
+                            .then(response => response.json())
+                            .then(profiles => {
+                                updateSearchResults(profiles);
+                            })
+                            .catch(error => console.error('Error:', error));
+                    }
+                }
+
+                function updateSearchResults(profiles) {
+                    const resultsContainer = document.getElementById('search-results');
+                    resultsContainer.innerHTML = ''; // Clear previous results
+
+                    if (profiles.length === 0) {
+                        resultsContainer.innerHTML = '<p>No profiles found</p>';
+                        return;
+                    }
+
+                    profiles.forEach(profile => {
+                        const profileDiv = document.createElement('div');
+                        profileDiv.classList.add('find-friend');
+                        profileDiv.innerHTML = `
+                        <div class="dp">
+                        <a href="/profile?username=${profile.username}">
+                            <img class="pfp" src="static/images/uploads/profile_pics/${profile.profile_pic}" {profile.name}">
+                        </div>
+                        <div class="account-info">
+                            <p class="name">${profile.name}</p>
+                        </div>
+                        </a>
+                        <div class="add-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-plus-square" viewBox="0 0 16 16">
+                                <path
+                                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                                <path
+                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                            </svg>
+                        </div>
+                        `;
+                        resultsContainer.appendChild(profileDiv);
+                    });
+                }
+            </script>
+
         </footer>
 
     </div>

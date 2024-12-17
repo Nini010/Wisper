@@ -35,20 +35,23 @@ def edit():
 
 @app.route('/myprofile')
 def myprofile():
-    print(session['pfp'])
-    return render_template('my-pfp.html', page='settings', name = session['name'], pfp = session['pfp'])
+    posts = get_posts(session['username'])
+    return render_template('my-pfp.html', page='settings', name = session['name'], pfp = session['pfp'], posts = posts, num_of_posts = len(posts))
 
 @app.route('/profile')
 def profile():
-    return render_template('Profilepage.html', page='settings')
+    username = request.args.get('username')
+    profile = get_profile((username,))
+    posts = get_posts(session['username'])
+    return render_template('Profilepage.html', page = 'settings', name = profile[1], pfp = profile[0], posts = posts, num_of_posts = len(posts))
 
 @app.route('/notification')
 def notification():
-    return render_template('notifications.html', page='notif')
+    return render_template('notifications.html', page = 'notif')
 
 @app.route('/profileinfo')
 def profileinfo():
-    return render_template('ProfileInfo.html', page='profileinfo')
+    return render_template('ProfileInfo.html', page = 'profileinfo')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=('ssl.crt', 'ssl.key'))
+    app.run(host = '0.0.0.0', port = 5000, debug = True, ssl_context = ('ssl.crt', 'ssl.key'))

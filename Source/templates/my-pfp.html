@@ -12,7 +12,7 @@
 
 
     <div class="counter">
-      <h3><strong>2</strong></h3>
+      <h3><strong>{{ num_of_posts }}</strong></h3>
       <h5><strong>posts</strong></h5>
     </div>
     <div class="counter">
@@ -33,23 +33,10 @@
   </div>
 </div>
 <div class="posts-container">
+  {% for post in posts%}
   <div>
-    <img class="post" src="static\images\pfp.jpg">
+    <img class="post" src="{{url_for('static', filename='images/uploads/posts/' + post)}}">
   </div>
-  <div>
-    <img class="post" src="static\images\pfp.jpg">
-  </div>
-  <div>
-    <img class="post" src="static\images\pfp.jpg">
-  </div>
-  <div>
-    <img class="post" src="static\images\pfp.jpg">
-  </div>
-  <div>
-    <img class="post" src="static\images\pfp.jpg">
-  </div>
-  <div>
-    <img class="post" src="static\images\pfp.jpg">
-  </div>
+  {% endfor %}
 </div>
 {% endblock %}

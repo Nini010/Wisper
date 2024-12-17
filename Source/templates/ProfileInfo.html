@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="static\css\chats.css">
   <link rel="stylesheet" href="static\css\settings.css">
   <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/pfp_upload.js') }}"></script>
 
 </head>
 
@@ -49,18 +49,14 @@
         <form action="/addProfile" method="POST">
           <ul class="edit-list position" type="none">
             <div class="centering-along-y y ">
-              <li>
-                <a class="list-item editP" href="#">Username:</a><br>
-                <input type="text" class="input" name="username" placeholder="M.Zain" required></input>
+              <li class="list-item editP">Username:<br>
+                <input type="text" class="input" name="username" placeholder="example" required></input>
               </li>
-              <li>
-                <a class="list-item editP" href="#">Date of Birth:</a><br>
+              <li class="list-item editP">Date of Birth:<br>
                 <input type="date" class="input" name="dob" placeholder="mm/dd/yyyy" required></input>
               </li>
-              <li>
-                <a class="list-item editP" href="#">Phone number:</a><br>
-                <input type="text" class="input" name="number" pattern="/^+92(7\d|8\d|9\d)\d{9}$/"
-                  placeholder="03XX XXXXXXX" required></input>
+              <li class="list-item editP">Phone number:<br>
+                <input type="text" class="input" name="number"placeholder="03XX XXXXXXX" required></input>
               </li>
               <button class="edit-btn continue-btn">Continue</button>
             </div>

@@ -181,6 +181,7 @@ body {
   color: #ffffff;
   margin-bottom: 0%;
   vertical-align: middle;
+  text-decoration: none;
 }
 
 .account-info .username {
@@ -213,6 +214,7 @@ body {
 .n-btn {
   background-color: transparent;
   border: none;
+  padding: none;
 }
 
 .n-btn:focus {
@@ -230,6 +232,16 @@ body {
   justify-content: center;
   vertical-align: middle;
   height: 35px;
+}
+
+.icons:hover {
+  background-color: rgba(83, 92, 145, 0.5);
+  cursor: pointer;
+  box-shadow: 2px 1px 2px 1px rgba(255, 255, 255, 0.277);
+}
+
+.icons.active {
+  background-color: #383e60;
 }
 
 p {
@@ -385,7 +397,7 @@ h5 {
   color: #dfdefe;
   padding: 3%;
   height: 50px;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 }

@@ -88,7 +88,7 @@ nav a:hover {
 
 .input {
   border-radius: 0.5rem;
-  margin: 2% 2%;
+  margin: 2% 0 2% 0;
   background-color: #1B1A55;
   border: none;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -266,4 +266,5 @@ nav a:hover {
 
 .editP {
   border: none;
+  margin: 0;
 }
