@@ -35,11 +35,12 @@ def edit():
 
 @app.route('/myprofile')
 def myprofile():
-    return render_template('my-pfp.html', page='settings')
+    print(session['pfp'])
+    return render_template('my-pfp.html', page='settings', name = session['name'], pfp = session['pfp'])
 
 @app.route('/profile')
 def profile():
-    return render_template('Profilepage.html', page='settings', name = session['name'], pfp = session['pfp'])
+    return render_template('Profilepage.html', page='settings')
 
 @app.route('/notification')
 def notification():
