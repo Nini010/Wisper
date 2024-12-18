@@ -7,14 +7,95 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/DMs.css') }}">
+  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/emoji.js') }}"></script>
+  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+  <script>
+    // Initialize socket connection
+    const socket = io.connect('https://' + document.domain + ':' + location.port);
+
+    // Pass dynamic Flask variables into JavaScript
+    const myUsername = "{{ my_username }}";
+    const receiverUsername = "{{ username }}";
+    const name = "{{ name }}";
+
+    // Fetch chats on page load
+    socket.emit('fetch_chats', { my_username: myUsername, receiver_username: receiverUsername });
+
+    // Update chats in real-time
+    socket.on('update_chats', (data) => {
+      const chatsSection = document.getElementById('chats-section');
+      chatsSection.innerHTML = ''; // Clear existing chats
+
+      data.chats.forEach(chat => {
+        const chatDiv = document.createElement('div');
+        chatDiv.classList.add('messages-container');
+
+        if (chat.sender_username === myUsername) {
+          chatDiv.classList.add('s');
+          chatDiv.innerHTML = `<button class="sent-chats">${chat.text}</button>`;
+        } else if (chat.sender_username === receiverUsername) {
+          chatDiv.classList.add('r');
+          chatDiv.innerHTML = `<button class="received-chats">${chat.text}</button>`;
+        }
+
+        chatsSection.appendChild(chatDiv);
+      });
+
+      // Scroll to the bottom of the chat section
+      chatsSection.scrollTop = chatsSection.scrollHeight;
+    });
+
+    // Emit message to server when send button is clicked
+    function sendMessage() {
+      const text = document.getElementById('message').value.trim();
+      if (!text) return; // Don't send empty messages
+
+      const messageData = {
+        text: text,
+        username: receiverUsername,
+        my_name: "{{ my_name }}",
+        my_username: myUsername,
+        name: name,
+      };
+
+      // Add the message immediately to the UI (appended to the bottom)
+      appendMessageToUI(myUsername, text, 's');
+
+      // Emit the message to the server
+      socket.emit('send_message', messageData);
+
+      // Clear the input field
+      document.getElementById('message').value = '';
+    }
+
+    // Append a message to the UI
+    function appendMessageToUI(sender, text, type) {
+      const chatsSection = document.getElementById('chats-section');
+      const chatDiv = document.createElement('div');
+      chatDiv.classList.add('messages-container', type);
+      chatDiv.innerHTML = `<button class="${type === 's' ? 'sent-chats' : 'received-chats'}">${text}</button>`;
+
+      // Append the new message to the bottom of the chats section
+      chatsSection.prepend(chatDiv);
+
+      // Scroll to the bottom of the chat section after appending
+      chatsSection.scrollTop = chatsSection.scrollHeight;
+    }
+
+    // Listen for incoming messages
+    socket.on('receive_message', function (data) {
+      if (data.receiver_username === myUsername) {
+        appendMessageToUI(data.sender_username, data.text, 'r');
+      }
+    });
+  </script>
+
 </head>
 
 <body>
   <div class="bg">
-    <!-- Link to Bootstrap JS -->
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <div class=" dm-header">
+    <div class="dm-header">
       <a href="{{ url_for('chats') }}" class="arrow">
         <div class="arrow-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -25,10 +106,10 @@
         </div>
       </a>
       <div class="dp">
-        <img class="dp-pfp" src="static/images/pfp.jpg">
+        <img class="dp-pfp" src="{{url_for('static', filename='images/uploads/profile_pics/' + pfp)}}">
       </div>
       <div class="P-name">
-        <h2>Profile name</h2>
+        <h2>{{ name }}</h2>
       </div>
       <div class="info-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-circle"
@@ -40,15 +121,11 @@
         </svg>
       </div>
     </div>
-    <div class="chats-disp-sec">
-      <div class=" messages-container r">
-        <button class="received-chats">Hello</button>
-      </div>
-      <div class=" messages-container s">
-        <button class="sent-chats">Hi this is a test message will i go to the next line ?</button>
-      </div>
 
+    <div class="chats-disp-sec" id="chats-section">
+      <!-- Chat messages will be dynamically updated here -->
     </div>
+
     <div class="Text-container">
       <!--Upload icon-->
       <div class="uploads dm-icons">
@@ -70,7 +147,7 @@
       </div>
       <!--Input Section-->
       <div class="dm-input">
-        <input class="messages" type="text" placeholder="Messages">
+        <input class="messages" type="text" placeholder="Messages" id="message">
         <div class="emoji">
           <svg id="emoji-toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-emoji-grin-fill" viewBox="0 0 16 16">
@@ -101,19 +178,17 @@
           </div>
         </div>
       </div>
-      <!--JavaScript for emoji panel motion-->
       <div class="dm-icons">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-send-fill"
-          viewBox="0 0 16 16">
-          <path
-            d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z" />
-        </svg>
+        <button onclick="sendMessage()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-send-fill"
+            viewBox="0 0 16 16">
+            <path
+              d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z" />
+          </svg>
+        </button>
       </div>
     </div>
-    </form>
-
   </div>
-
 </body>
 
 </html>
