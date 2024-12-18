@@ -18,12 +18,14 @@ def index():
 def DM():
     recipient_username = request.args.get('username')
     chats = get_chats(session['username'], recipient_username)
-    return render_template('DMs.html', page='dm')
+    profile = get_profile((recipient_username,))
+    return render_template('DMs.html', page='dm', name = profile[1], pfp = profile[0], username = recipient_username, my_username = session['username'], my_name = session['name'])
 
 @app.route('/chats')
 def chats():
     users = chats_list(session['username'])
-    return render_template('chats.html', page='home', users=users)
+    profile = get_profile((session['username'],))
+    return render_template('chats.html', page='home', users=users, pfp=profile[0])
 
 @app.route('/settings')
 def settings():
@@ -41,9 +43,12 @@ def myprofile():
 @app.route('/profile')
 def profile():
     username = request.args.get('username')
-    profile = get_profile((username,))
-    posts = get_posts(session['username'])
-    return render_template('Profilepage.html', page = 'settings', name = profile[1], pfp = profile[0], posts = posts, num_of_posts = len(posts))
+    if username == session['username']:
+        return redirect(url_for('myprofile'))
+    else:
+        profile = get_profile((username,))
+        posts = get_posts(session['username'])
+        return render_template('Profilepage.html', page = 'settings', name = profile[1], pfp = profile[0], posts = posts, num_of_posts = len(posts), username = username)
 
 @app.route('/notification')
 def notification():

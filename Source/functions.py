@@ -5,12 +5,14 @@ from google_auth_oauthlib.flow import Flow
 import google.auth.transport.requests
 from authlib.integrations.flask_client import OAuth
 from werkzeug.utils import secure_filename
+from flask_socketio import SocketIO, emit
 import os
 import glob
 import uuid
 import sqlite3
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 app.secret_key = os.urandom(24)
 
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
@@ -85,11 +87,9 @@ def create_tables():
 
 def chats_list(username):
     try:
-        # Connect to the SQLite database
         connection = sqlite3.connect('profile.db')
         cursor = connection.cursor()
 
-        # SQL query to find the latest message for each unique username
         query = """
         SELECT sender, sender_username, receiver, receiver_username, text
         FROM chats
@@ -106,10 +106,8 @@ def chats_list(username):
         ORDER BY id DESC
         """
 
-        # Execute the query with the username
         cursor.execute(query, (username, username, username))
 
-        # Fetch all matching rows
         rows = cursor.fetchall()
 
         # Transform rows into a list of dictionaries
@@ -147,18 +145,9 @@ def get_chats(username, recipient_username):
         WHERE ((sender_username = ? AND receiver_username = ?) OR (sender_username = ? AND receiver_username = ?))
         ORDER BY id DESC
         """
-
-        cursor.execute(query,(username, recipient_username, recipient_username, username))
+        cursor.execute(query, (username, recipient_username, recipient_username, username))
         rows = cursor.fetchall()
-        chats = []
-        for row in rows:
-            chats.append({
-                "sender": row[0],
-                "sender_username" : row[1],
-                "text" : row[2],
-                "blob" : row[3]
-
-            })
+        chats = [{"sender": row[0], "sender_username": row[1], "text": row[2], "blob": row[3]} for row in rows]
         return chats
     except sqlite3.Error as e:
         print(f"SQLite error: {e}")
@@ -166,6 +155,35 @@ def get_chats(username, recipient_username):
     finally:
         if connection:
             connection.close()
+
+@socketio.on('fetch_chats')
+def fetch_chats(data):
+    my_username = data['my_username']
+    receiver_username = data['receiver_username']
+    chats = get_chats(my_username, receiver_username)
+    emit('update_chats', {'chats': chats}, broadcast=True)
+
+def insert_chat(sender, sender_username, receiver, receiver_username, text):
+    connection = sqlite3.connect("profile.db")
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO chats (sender, sender_username, receiver, receiver_username, text) VALUES (?, ?, ?, ?, ?)", 
+                   (sender, sender_username, receiver, receiver_username, text))
+    connection.commit()
+    connection.close()
+
+# SocketIO event to handle the message submission
+@socketio.on('send_message')
+def handle_message(data):
+    sender = data['my_name']
+    sender_username = data['my_username']
+    receiver = data['name']
+    receiver_username = data['username']
+    text = data['text']
+    
+    insert_chat(sender, sender_username, receiver, receiver_username, text)
+    
+    # Broadcast the message to all connected clients
+    emit('receive_message', {'sender_username': sender, 'receiver': receiver, 'text': text}, broadcast=True)
 
 def get_posts(username):
     files = [os.path.basename(file) for file in glob.glob(f"static/images/uploads/posts/{username}-*") if os.path.isfile(file)]
@@ -196,9 +214,41 @@ def add_profile():
             VALUES (?, ?, ?, ?, ?, ?, ?)
             """, (session['pfp'], username, name, email, number, dob, None))
             connection.commit()
+            insertion_sort()
             return  redirect(url_for('chats'))
         except sqlite3.IntegrityError as e:
             print(f"Error inserting profile: {e}")
+
+def insertion_sort():
+    # Connect to the SQLite database
+    connection = sqlite3.connect('profile.db')
+    cursor = conn.cursor()
+
+    # Fetch all records from the profiles table
+    cursor.execute("SELECT * FROM profiles")
+    profiles = cursor.fetchall()
+
+    # Insertion sort implementation based on the username field
+    for i in range(1, len(profiles)):
+        key = profiles[i]
+        j = i - 1
+        while j >= 0 and profiles[j][1] > key[1]:  # Compare usernames (index 1)
+            profiles[j + 1] = profiles[j]
+            j -= 1
+        profiles[j + 1] = key
+
+    # Clear the profiles table
+    cursor.execute("DELETE FROM profiles")
+
+    # Insert sorted records back into the table
+    cursor.executemany(
+        "INSERT INTO profiles (profile_pic, username, name, email, number, dob, friends) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        profiles,
+    )
+
+    # Commit changes and close the connection
+    connection.commit()
+    connection.close()
 
 def get_profile(username):
     try:
@@ -214,7 +264,7 @@ def get_profile(username):
         cursor.execute(query, username)
         rows = cursor.fetchone()
         if rows == None:
-            print("HIIII")
+            print("No profile found")
         return rows
     except sqlite3.Error as e:
         print(f"SQLite error: {e}")
@@ -232,9 +282,10 @@ def search_profile(username):
         SELECT profile_pic, name, username
         FROM profiles
         WHERE (username LIKE ? OR name LIKE ?)
+        AND username != ?
         """
 
-        cursor.execute(query,('%' + username + '%', '%' + username + '%'))
+        cursor.execute(query,('%' + username + '%', '%' + username + '%', session['username']))
         rows = cursor.fetchall()
         return rows
     except sqlite3.Error as e:
@@ -313,14 +364,11 @@ def loginWithFacebook():
 
 @app.route('/FB_auth_callback')
 def FB_auth_callback():
-    # Retrieve the access token
     token = facebook.authorize_access_token()
 
-    # Use the token to fetch user information from Facebook
     resp = facebook.get('https://graph.facebook.com/me?fields=id,name,email', token=token)
     user = resp.json()
 
-    # Save the user information in the session
     session['email'] = user.get('email')
     session['name'] = user.get('name')
 
@@ -328,12 +376,11 @@ def FB_auth_callback():
     cursor = connection.cursor()      
     cursor.execute("SELECT profile_pic, username FROM profiles WHERE email = ?", (user.get('email'),))
     result = cursor.fetchone()
-    
     if not result:
-        return url_for('profileinfo')
+        return redirect(url_for('profileinfo'))
     else:
-        session['username'] = result[0]
-        session['pfp'] = result[1]
+        session['pfp'] = result[0]
+        session['username'] = result[1]
         return redirect(url_for('chats'))
 
 @app.route('/auth_callback')

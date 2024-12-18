@@ -28,9 +28,10 @@
   <div class="bio">
     <h6>Bio .......................</h6>
   </div>
-  <div class="edit-profile">
-    <button class="edit-btn">Send Message</button>
-  </div>
+  <a href="/dm?username={{ username }}">
+    <div class="edit-profile">
+      <button class="edit-btn">Send Message</button>
+    </div>
 </div>
 <div class="posts-container">
   {% for post in posts%}
