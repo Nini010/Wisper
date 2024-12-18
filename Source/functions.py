@@ -189,6 +189,19 @@ def get_posts(username):
     files = [os.path.basename(file) for file in glob.glob(f"static/images/uploads/posts/{username}-*") if os.path.isfile(file)]
     return files
 
+@app.route('/checkUsername', methods=['POST'])
+def check_username():
+    username = request.json.get('username')
+    connection = sqlite3.connect("profile.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM profiles WHERE username = ?", (username,))
+    exists = cursor.fetchone()[0] > 0
+
+    connection.close()
+    return {"exists": exists}
+
+
 @app.route('/addProfile', methods=['POST'])
 def add_profile():
     if request.method == 'POST':
@@ -203,6 +216,7 @@ def add_profile():
         else:
             directory = os.path.dirname(session['pfp'])
             new_file_path = os.path.join(directory, session['username'] + '.jpg')
+            os.remove(new_file_path)
             os.rename(session['pfp'], new_file_path)
             session['pfp'] = session['username'] + '.jpg'
 
@@ -220,11 +234,9 @@ def add_profile():
             print(f"Error inserting profile: {e}")
 
 def insertion_sort():
-    # Connect to the SQLite database
     connection = sqlite3.connect('profile.db')
-    cursor = conn.cursor()
+    cursor = connection.cursor()
 
-    # Fetch all records from the profiles table
     cursor.execute("SELECT * FROM profiles")
     profiles = cursor.fetchall()
 
@@ -237,7 +249,6 @@ def insertion_sort():
             j -= 1
         profiles[j + 1] = key
 
-    # Clear the profiles table
     cursor.execute("DELETE FROM profiles")
 
     # Insert sorted records back into the table
@@ -246,7 +257,6 @@ def insertion_sort():
         profiles,
     )
 
-    # Commit changes and close the connection
     connection.commit()
     connection.close()
 
@@ -371,6 +381,7 @@ def FB_auth_callback():
 
     session['email'] = user.get('email')
     session['name'] = user.get('name')
+    session['acct_type'] = 'facebook'
 
     connection = sqlite3.connect("profile.db")
     cursor = connection.cursor()      
@@ -402,6 +413,7 @@ def callback():
         )
         session['email'] = id_info.get('email')
         session['name'] = id_info.get('name')
+        session['acct_type'] = 'google'
         
         connection = sqlite3.connect("profile.db")
         cursor = connection.cursor()      
@@ -419,3 +431,33 @@ def callback():
     except Exception as e:
         flash(f"An error occurred during authentication: {str(e)}")
         return redirect(url_for('index'))
+
+@app.route('/logout')
+def logout():
+    if session.get('acct_type') == 'google':
+        try:
+            # Clear session data
+            session.pop('state', None)
+            session.pop('email', None)
+            session.pop('name', None)
+            session.pop('pfp', None)
+            session.pop('username', None)
+
+            credentials = flow.credentials
+            if credentials and credentials.token:
+                google.oauth2.credentials.Credentials.revoke(credentials)
+
+            flash("You have been logged out.")
+            return redirect(url_for('index'))
+        except Exception as e:
+            flash(f"An error occurred during logout: {str(e)}")
+            return redirect(url_for('index'))
+        
+    elif session.get('acct_type') == 'facebook':
+        try:
+            facebook.logout()
+    
+            return redirect(url_for('index')) 
+        except Exception as e:
+            flash(f"An error occurred during logout: {str(e)}")
+            return redirect(url_for('index'))

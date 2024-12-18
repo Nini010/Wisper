@@ -13,9 +13,10 @@
 
 <body>
   <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
   <nav>
     <div class="container banner">
-      <a href="{{ url_for('chats') }}">
+      <a href="{{ url_for('myprofile') }}">
         <div class="btc">
           <button class="btn back" type="button" id="backtochat">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill=" #9290C3"
@@ -29,9 +30,7 @@
       <div class="title">
         <h1>Settings</h1>
       </div>
-
     </div>
-
   </nav>
 
   <main class="container">
@@ -39,15 +38,103 @@
       <ul class="settings-list" type="none">
         <li><a class="list-item" href="#">Themes</a></li>
         <li><a class="list-item" href="{{ url_for('edit') }}">Edit Profile</a></li>
-        <li><a class="list-item" href="#">Archived Chats</a></li>
         <li><a class="list-item" href="#">2 Factor Authentication</a></li>
         <li><a class="list-item" href="#">Block</a></li>
-        <li><a class="list-item" href="#">Sign In</a></li>
-        <li><a class="list-item" href="#">Log Out</a></li>
-        <li><a class="list-item" href="#">Delete Account</a></li>
+        <li><a class="list-item" href="{{ url_for('logout') }}">Log Out</a></li>
+        <li><a class="list-item" href="#" id="deleteAccount">Delete Account</a></li>
       </ul>
     </div>
   </main>
+
+  <!-- Confirmation Overlay -->
+  <div id="confirmOverlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+      <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+      <button id="confirmDelete" class="btn btn-danger">Yes, Delete</button>
+      <button id="cancelDelete" class="btn btn-secondary">No, Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const deleteAccountButton = document.getElementById('deleteAccount');
+      const overlay = document.getElementById('confirmOverlay');
+      const cancelButton = document.getElementById('cancelDelete');
+      const confirmButton = document.getElementById('confirmDelete');
+      const overlayContent = document.querySelector('.overlay-content');
+
+      // Show the overlay when the Delete Account button is clicked
+      deleteAccountButton.addEventListener('click', () => {
+        overlay.style.display = 'flex';
+      });
+
+      // Close the overlay when Cancel is clicked
+      cancelButton.addEventListener('click', () => {
+        overlay.style.display = 'none';
+      });
+
+      // Call delete_account function when Yes is clicked
+      confirmButton.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        delete_account();
+      });
+
+      // Close the overlay if clicked outside the box
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) {
+          overlay.style.display = 'none';
+        }
+      });
+
+      // Prevent overlay content box from closing when clicked
+      overlayContent.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+    });
+
+    // Function to handle account deletion
+    function delete_account() {
+      // Add your logic here to delete the account, e.g., an AJAX request to the backend
+      console.log("Account deleted.");
+      // Optionally, redirect or log out the user after deletion
+      window.location.href = "{{ url_for('logout') }}";
+    }
+  </script>
+
+  <style>
+    /* Overlay styling */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      /* Initially hidden */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .overlay-content {
+      background: black;
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      min-width: 300px;
+    }
+
+    .overlay-content p {
+      margin-bottom: 20px;
+    }
+
+    .overlay-content button {
+      margin: 10px;
+    }
+  </style>
+
 </body>
 
 </html>
