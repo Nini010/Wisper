@@ -37,14 +37,18 @@
 
   <main class="info-container">
     <form action="/addProfile" method="POST">
-      <form id="uploadForm">
-        <input type="file" name="file" id="file" accept="image/*" required />
-      </form>
 
       <!-- Container for the Image Preview -->
       <div class="edit-dp-container">
         <img id="preview" class="edit-dp" src="{{ url_for('static', filename='images/uploads/profile_pics/pfp.jpg') }}"
           alt="Profile Picture Preview" />
+      </div>
+      <!--Check laterrrrrrr-->
+      <div class="upload-form">
+        <form id="uploadForm">
+          <label for="file" class="upload-form-btn"> Choose file</label>
+          <input class="upload-form-btn" type="file" name="file" id="file" accept="image/*"> 
+        </form>
       </div>
       <div class="editP-card">
         <form action="/addProfile" method="POST">
