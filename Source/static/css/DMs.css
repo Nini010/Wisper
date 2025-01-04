@@ -221,7 +221,7 @@ body {
 .messages-container {
   display: flex;
   flex-direction: column-reverse;
-  margin: 5px 0;
+  margin: 15px 0px;
 }
 
 .s {

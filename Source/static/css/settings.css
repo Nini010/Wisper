@@ -86,18 +86,6 @@ nav a:hover {
   color: #767575;
 }
 
-.add-link-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 5%;
-
-}
-
-.add-link {
-  text-decoration: none;
-  font-size: large;
-}
-
 .input {
   border-radius: 0.5rem;
   margin: 2% 0 2% 0;
@@ -224,6 +212,9 @@ nav a:hover {
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   vertical-align: center;
+  margin-top: 10px;
+  padding-right: 10px;
+  padding-left: 10px;
   margin-bottom: 2%;
 }
 
@@ -235,9 +226,7 @@ nav a:hover {
   border: none;
   background-color: transparent;
   color: #dfdefe;
-  height: 45px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  height: 40px;
   transition: background-color 0.3s;
 }
 
@@ -251,7 +240,7 @@ nav a:hover {
   background-color: #383e60;
 }
 
-/*Profile info*/
+/*initial input*/
 .info-container {
   max-width: 100%;
   width: 100%;
@@ -259,42 +248,15 @@ nav a:hover {
   display: block;
 }
 
-.upload-form {
-  display: flex;
-  justify-content: center;
-}
-
-.upload-form-btn-input {
-  display: none;
-  opacity: 0;
-}
-
-.upload-form-btn {
-  background-color: transparent;
-  width: 98px;
-  margin-top: 4%;
-
-}
-
-.upload-form-btn:hover {
-  background-color: transparent;
-  cursor: pointer;
-  box-shadow: 2px 1px 2px 1px rgba(255, 255, 255, 0.277);
-}
-
-.upload-form-btn.active {
-  background-color: transparent;
-}
-
 .position {
   display: flex;
   justify-items: center;
   flex-direction: column;
   align-items: center;
-  margin-top: 2%
+  margin-top: 1%
 }
 
-.y {
+.centering-along-y {
   line-height: 25px;
 }
 

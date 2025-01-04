@@ -16,7 +16,6 @@
 
 <body>
     <div class="bg">
-        <script src="{{ url_for('static', filename='js/add_friend.js') }}"></script>
         <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <!--Header-->
         <div class="header {% if page == 'settings' %}header-settings{% endif %}">
@@ -35,17 +34,6 @@
                         </svg>
                     </button>
                 </a>
-                <a href="{{ url_for('settings') }}" class="link">
-                <button class="btn settings-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#9290C3"
-                        class="{% if page == 'settings' %}bi bi-gear{% endif %}" viewBox="0 0 20 20">
-                        <path
-                            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
-                        <path
-                            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
-                    </svg>
-                </button>
-            </a>
             </div>
             {% endif %}
             {% endblock %}
@@ -61,19 +49,10 @@
             <div class="Nav-opt" id="footer">
                 <a href="{{ url_for('myprofile') }}" class="link">
                     <div class="profile-page icon-container">
-            <!--Script for handling highlightbar activity-->
-            <script src="{{ url_for('static', filename='js/highlight_bar.js') }}"></script>
-            <!--Highlight bar-->
-            <div class="highlight-bar"></div>
-            <div class="Nav-opt" id="footer" role="tablist">
-                <a href="{{ url_for('myprofile') }}" class="link my-profile-link">
-                    <div class="profile-page icon-container" role="tab" aria-label="Profile" tabindex="0" aria-selected="false">
                         <button class="n-btn">
                             <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
                                 aria-label="Tags" class="x1lliihq x1n2onr6 x9bdzbf" fill="currentColor" height="22"
                                 role="img" viewBox="0 0 24 24" width="22">
-                                aria-label="Tags" class="x1lliihq x1n2onr6 x9bdzbf" fill="currentColor"
-                                height="22" role="img" viewBox="0 0 24 24" width="22">
                                 <title fill="#FFFFFF">Tags</title>
                                 <path
                                     d="M21.334 23H2.666a1 1 0 0 1-1-1v-1.354a6.279 6.279 0 0 1 6.272-6.272h8.124a6.279 6.279 0 0 1 6.271 6.271V22a1 1 0 0 1-1 1ZM12 13.269a6 6 0 1 1 6-6 6.007 6.007 0 0 1-6 6Z"
@@ -84,7 +63,7 @@
                 </a>
 
 
-                <div class="search-page icon-container" role="tab" aria-label="Search" tabindex="0" aria-selected="false">
+                <div class="search-page icon-container">
                     <button class="n-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom"
                         aria-controls="offcanvasBottom">
                         <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
@@ -100,10 +79,9 @@
                     </button>
                 </div>
 
-                <div class="addPost icon-container" role="tab" aria-label="AddPost" tabindex="0" aria-selected="false">
+                <div class="addPost icon-container">
                     <button id="addPostBtn" class="n-btn" type="button">
-                        <!--<div class="message-cont" id="message">-->
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
+                        <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
                             aria-label="New post" class="x1lliihq x1n2onr6 x5n08af" fill="#9290C3" height="24"
                             role="img" viewBox="0 0 24 24" width="24">
                             <title fill="#F5F5F5">New post</title>
@@ -120,29 +98,24 @@
                     </button>
                     <input id="file" type="file" style="display:none" />
                     <img id="preview" src="" alt="Image preview" style="display:none;" />
-                    
+                    <div id="message"></div>
                 </div>
 
 
                 <a href="{{ url_for('notification') }}" class="link">
                     <div class="notifs icon-container">
-                <a href="{{ url_for('notification') }}" class="link notification-link">
-                    <div class="notifs icon-container" role="tab" aria-label="Notif" tabindex="0" aria-selected="false">
                         <button class="n-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#9290C3"
-                                class="bi bi-bell-fill" viewBox="0 0 16 16">
                                 class="bi bi-bell-fill" viewBox="0 0 16 16">
                                 <path
                                     d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
                             </svg>
                         </button>
                     </div>
-                </a> 
+                </a>
 
                 <a href="{{ url_for('chats') }}" class="link">
                     <div class="home icon-container">
-                <a href="{{ url_for('chats') }}" class="link home-link">
-                    <div class="home icon-container" role="tab" aria-label="Home" tabindex="0" aria-selected="true">
                         <button class="n-btn">
                             <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
                                 aria-label="Home" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24"
@@ -240,15 +213,17 @@
                             <p class="name">${profile.name}</p>
                         </div>
                         </a>
-                        <div class="add-btn" >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-plus-square" viewBox="0 0 16 16">
-                                <path
-                                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                                <path
-                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                            </svg>
-                        </div>
+                        <a href="/dm?username=${profile.username}">
+                            <div class="add-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-plus-square" viewBox="0 0 16 16">
+                                    <path
+                                        d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                                    <path
+                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                                </svg>
+                            </div>
+                        </a>
                         `;
                         resultsContainer.appendChild(profileDiv);
                     });
