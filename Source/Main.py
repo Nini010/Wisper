@@ -43,12 +43,9 @@ def myprofile():
 @app.route('/profile')
 def profile():
     username = request.args.get('username')
-    if username == session['username']:
-        return redirect(url_for('myprofile'))
-    else:
-        profile = get_profile((username,))
-        posts = get_posts(session['username'])
-        return render_template('Profilepage.html', page = 'settings', name = profile[1], pfp = profile[0], posts = posts, num_of_posts = len(posts), username = username)
+    profile = get_profile((username,))
+    posts = get_posts(session['username'])
+    return render_template('Profilepage.html', page = 'settings', name = profile[1], pfp = profile[0], posts = posts, num_of_posts = len(posts))
 
 @app.route('/notification')
 def notification():
@@ -58,7 +55,6 @@ def notification():
 def profileinfo():
     return render_template('ProfileInfo.html', page = 'profileinfo')
 
-# Custom 404 error handler
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("404.html"), 404

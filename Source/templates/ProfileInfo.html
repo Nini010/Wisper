@@ -16,20 +16,9 @@
 </head>
 
 <body>
-  <nav>
-    <div class="container banner">
-      <a href="{{ url_for('settings') }}">
-        <div class="btc">
-          <button class="btn back" type="button" id="backtochat">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#9290C3"
-              class="bi bi-arrow-left-circle" viewBox="0 0 17 17">
-              <path fill-rule="evenodd"
-                d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-            </svg>
-          </button>
-        </div>
-      </a>
-      <div class="title">
+  <nav style="padding-bottom: 2%;">
+    <div class="container banner" style="display: flex;">
+      <div>
         <h1>Profile Info:</h1>
       </div>
     </div>
@@ -46,14 +35,14 @@
       <!--Check laterrrrrrr-->
       <div class="upload-form">
         <form id="uploadForm">
-          <label for="file" class="upload-form-btn"> Choose file</label>
-          <input class="upload-form-btn" type="file" name="file" id="file" accept="image/*"> 
+          <label for="file" class="upload-form-label"> Choose file</label>
+          <input class="upload-form-btn" type="file" name="file" id="file" accept="image/*">
         </form>
       </div>
       <div class="editP-card">
         <form action="/addProfile" method="POST">
           <ul class="edit-list position" type="none">
-            <div class="centering-along-y y ">
+            <div class="centering-along-y">
               <li class="list-item editP">Username:<br>
                 <input type="text" class="input" name="username" id="username" placeholder="example" required>
                 <small id="usernameError" class="text-danger" style="display: none;">Username is already taken.</small>

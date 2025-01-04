@@ -1,43 +1,140 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wisper</title>
 
-{% block content %}
-<div class="profile-portion">
-  <div class="profile-container">
+  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="static\css\chats.css">
+  <link rel="stylesheet" href="static\css\settings.css">
+</head>
 
-    <div class="dp profile-img-container">
-      <img class="profileimg" src="{{url_for('static', filename='images/uploads/profile_pics/' + pfp)}}">
+<body>
+  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
+  <nav>
+    <div class="container banner">
+      <a href="{{ url_for('myprofile') }}">
+        <div class="btc">
+          <button class="btn back" type="button" id="backtochat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill=" #9290C3"
+              class="bi bi-arrow-left-circle" viewBox="0 0 17 17">
+              <path fill-rule="evenodd"
+                d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+            </svg>
+          </button>
+        </div>
+      </a>
+      <div class="title">
+        <h1>Settings</h1>
+      </div>
     </div>
+  </nav>
 
-
-    <div class="counter">
-      <h3><strong>{{ num_of_posts }}</strong></h3>
-      <h5><strong>posts</strong></h5>
+  <main class="container">
+    <div class="settings-card">
+      <ul class="settings-list" type="none">
+        <li><a class="list-item" href="#">Themes</a></li>
+        <li><a class="list-item" href="{{ url_for('edit') }}">Edit Profile</a></li>
+        <li><a class="list-item" href="#">2 Factor Authentication</a></li>
+        <li><a class="list-item" href="#">Block</a></li>
+        <li><a class="list-item" href="{{ url_for('logout') }}">Log Out</a></li>
+        <li><a class="list-item" href="#" id="deleteAccount">Delete Account</a></li>
+      </ul>
     </div>
-    <div class="counter">
-      <h3><strong>100</strong></h3>
-      <h5><strong>friends</strong></h5>
-    </div>
+  </main>
 
-    <div class="u-name">
-      <p class="name">{{ name }}</p>
+  <!-- Confirmation Overlay -->
+  <div id="confirmOverlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+      <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+      <button id="confirmDelete" class="btn btn-danger">Yes, Delete</button>
+      <button id="cancelDelete" class="btn btn-secondary">No, Cancel</button>
     </div>
-
   </div>
-  <div class="bio">
-    <h6>Bio .......................</h6>
-  </div>
-  <a href="/dm?username={{ username }}">
-    <div class="edit-profile">
-      <button class="edit-btn">Send Message</button>
-    </div>
-</div>
-<div class="posts-container">
-  {% for post in posts%}
-  <div>
-    <img class="post" src="{{url_for('static', filename='images/uploads/posts/' + post)}}">
-  </div>
-  {% endfor %}
-</div>
-{% endblock %}
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const deleteAccountButton = document.getElementById('deleteAccount');
+      const overlay = document.getElementById('confirmOverlay');
+      const cancelButton = document.getElementById('cancelDelete');
+      const confirmButton = document.getElementById('confirmDelete');
+      const overlayContent = document.querySelector('.overlay-content');
+
+      // Show the overlay when the Delete Account button is clicked
+      deleteAccountButton.addEventListener('click', () => {
+        overlay.style.display = 'flex';
+      });
+
+      // Close the overlay when Cancel is clicked
+      cancelButton.addEventListener('click', () => {
+        overlay.style.display = 'none';
+      });
+
+      // Call delete_account function when Yes is clicked
+      confirmButton.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        delete_account();
+      });
+
+      // Close the overlay if clicked outside the box
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) {
+          overlay.style.display = 'none';
+        }
+      });
+
+      // Prevent overlay content box from closing when clicked
+      overlayContent.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+    });
+
+    // Function to handle account deletion
+    function delete_account() {
+      // Add your logic here to delete the account, e.g., an AJAX request to the backend
+      console.log("Account deleted.");
+      // Optionally, redirect or log out the user after deletion
+      window.location.href = "{{ url_for('logout') }}";
+    }
+  </script>
+
+  <style>
+    /* Overlay styling */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      /* Initially hidden */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .overlay-content {
+      background: black;
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      min-width: 300px;
+    }
+
+    .overlay-content p {
+      margin-bottom: 20px;
+    }
+
+    .overlay-content button {
+      margin: 10px;
+    }
+  </style>
+
+</body>
+
+</html>

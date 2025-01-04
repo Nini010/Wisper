@@ -171,7 +171,7 @@ def insert_chat(sender, sender_username, receiver, receiver_username, text):
     connection.commit()
     connection.close()
 
-# SocketIO event to handle the message submission
+# Continuation of the existing event handler
 @socketio.on('send_message')
 def handle_message(data):
     sender = data['my_name']
@@ -180,7 +180,18 @@ def handle_message(data):
     receiver_username = data['username']
     text = data['text']
     
+    # Insert the chat into the database
     insert_chat(sender, sender_username, receiver, receiver_username, text)
+    
+    # Broadcast the message to the receiver and sender
+    emit('receive_message', {
+        'sender': sender,
+        'sender_username': sender_username,
+        'receiver': receiver,
+        'receiver_username': receiver_username,
+        'text': text
+    }, broadcast=True)
+
     
     # Broadcast the message to all connected clients
     emit('receive_message', {'sender_username': sender, 'receiver': receiver, 'text': text}, broadcast=True)
@@ -216,7 +227,6 @@ def add_profile():
         else:
             directory = os.path.dirname(session['pfp'])
             new_file_path = os.path.join(directory, session['username'] + '.jpg')
-            os.remove(new_file_path)
             os.rename(session['pfp'], new_file_path)
             session['pfp'] = session['username'] + '.jpg'
 
@@ -227,6 +237,37 @@ def add_profile():
             INSERT INTO profiles (profile_pic, username, name, email, number, dob, friends)
             VALUES (?, ?, ?, ?, ?, ?, ?)
             """, (session['pfp'], username, name, email, number, dob, None))
+            connection.commit()
+            insertion_sort()
+            return  redirect(url_for('chats'))
+        except sqlite3.IntegrityError as e:
+            print(f"Error inserting profile: {e}")
+
+@app.route('/updateProfile', methods=['POST'])
+def update_profile():
+    if request.method == 'POST':
+        username = request.form['name']
+        number = request.form['number']
+        dob = request.form['dob']
+        if session.get('pfp') == None:
+            session['pfp'] = 'pfp.jpg'
+        else:
+            directory = os.path.dirname(session['pfp'])
+            new_file_path = os.path.join(directory, session['username'] + '.jpg')
+            if os.path.isfile(session['pfp']):
+                os.remove(session['pfp'])
+            os.rename(session['pfp'], new_file_path)
+            session['pfp'] = session['username'] + '.jpg'
+
+        connection = sqlite3.connect("profile.db")
+        cursor = connection.cursor()
+        try:
+            cursor.execute("""
+            UPDATE profiles
+            SET profile_pic = ?, name = ?, number = ?, dob = ?
+            WHERE username = ?
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (session['pfp'], name, email, number, dob, session['username']))
             connection.commit()
             insertion_sort()
             return  redirect(url_for('chats'))
@@ -244,7 +285,7 @@ def insertion_sort():
     for i in range(1, len(profiles)):
         key = profiles[i]
         j = i - 1
-        while j >= 0 and profiles[j][1] > key[1]:  # Compare usernames (index 1)
+        while j >= 0 and profiles[j][1] > key[1]:
             profiles[j + 1] = profiles[j]
             j -= 1
         profiles[j + 1] = key
@@ -287,15 +328,12 @@ def search_profile(username):
     try:
         connection = sqlite3.connect('profile.db')
         cursor = connection.cursor()
-
         query = """
         SELECT profile_pic, name, username
         FROM profiles
         WHERE (username LIKE ? OR name LIKE ?)
-        AND username != ?
         """
-
-        cursor.execute(query,('%' + username + '%', '%' + username + '%', session['username']))
+        cursor.execute(query,('%' + username + '%', '%' + username + '%'))
         rows = cursor.fetchall()
         return rows
     except sqlite3.Error as e:
@@ -436,7 +474,6 @@ def callback():
 def logout():
     if session.get('acct_type') == 'google':
         try:
-            # Clear session data
             session.pop('state', None)
             session.pop('email', None)
             session.pop('name', None)
