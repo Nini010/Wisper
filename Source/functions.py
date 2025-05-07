@@ -6,6 +6,7 @@ import google.auth.transport.requests
 from authlib.integrations.flask_client import OAuth
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit
+import json
 import os
 import glob
 import uuid
@@ -15,8 +16,6 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 app.secret_key = os.urandom(24)
 
-CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
-CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 REDIRECT_URI = "https://127.0.0.1:5000/auth_callback"
 UPLOAD_FOLDER = 'static/images/uploads/profile_pics'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -24,30 +23,30 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-if not CLIENT_ID or not CLIENT_SECRET:
-    raise ValueError("Google CLIENT_ID and CLIENT_SECRET must be set as environment variables.")
+with open("FB_client_secret.json") as f:
+    fb_client_secret = json.load(f)
 
-flow = Flow.from_client_config(
-    {
-        "web": {
-            "client_id": CLIENT_ID,
-            "client_secret": CLIENT_SECRET,
-            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://oauth2.googleapis.com/token",
-            "redirect_uris": [REDIRECT_URI]
-        }
-    },
-    scopes=["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile", "openid"]
+flow = Flow.from_client_secrets_file(
+    "google_client_secret.json",
+    scopes=[
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "openid"
+    ],
+    redirect_uri=REDIRECT_URI
 )
+
+with open("google_client_secret.json") as f:
+    google_client_secret = json.load(f)
 
 oauth = OAuth(app)
 facebook = oauth.register(
-    name='facebook',    
-    client_id=os.getenv('FACEBOOK_CLIENT_ID'),
-    client_secret=os.getenv('FACEBOOK_CLIENT_SECRET'),
+    name='facebook',
+    client_id=fb_client_secret['web']['app_id'],
+    client_secret=fb_client_secret['web']['app_secret'],
     authorize_url='https://www.facebook.com/v14.0/dialog/oauth',
-    authorize_params=None,
     access_token_url='https://graph.facebook.com/v14.0/oauth/access_token',
+    authorize_params=None,
     access_token_params=None,
     refresh_token_url=None,
     refresh_token_params=None,
@@ -110,7 +109,6 @@ def chats_list(username):
 
         rows = cursor.fetchall()
 
-        # Transform rows into a list of dictionaries
         results = []
         for row in rows:
             if row[1] == username:
@@ -166,12 +164,10 @@ def fetch_chats(data):
 def insert_chat(sender, sender_username, receiver, receiver_username, text):
     connection = sqlite3.connect("profile.db")
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO chats (sender, sender_username, receiver, receiver_username, text) VALUES (?, ?, ?, ?, ?)", 
-                   (sender, sender_username, receiver, receiver_username, text))
+    cursor.execute("INSERT INTO chats (sender, sender_username, receiver, receiver_username, text) VALUES (?, ?, ?, ?, ?)", (sender, sender_username, receiver, receiver_username, text))
     connection.commit()
     connection.close()
 
-# Continuation of the existing event handler
 @socketio.on('send_message')
 def handle_message(data):
     sender = data['my_name']
@@ -180,10 +176,8 @@ def handle_message(data):
     receiver_username = data['username']
     text = data['text']
     
-    # Insert the chat into the database
     insert_chat(sender, sender_username, receiver, receiver_username, text)
     
-    # Broadcast the message to the receiver and sender
     emit('receive_message', {
         'sender': sender,
         'sender_username': sender_username,
@@ -193,7 +187,6 @@ def handle_message(data):
     }, broadcast=True)
 
     
-    # Broadcast the message to all connected clients
     emit('receive_message', {'sender_username': sender, 'receiver': receiver, 'text': text}, broadcast=True)
 
 def get_posts(username):
@@ -238,7 +231,6 @@ def add_profile():
             VALUES (?, ?, ?, ?, ?, ?, ?)
             """, (session['pfp'], username, name, email, number, dob, None))
             connection.commit()
-            insertion_sort()
             return  redirect(url_for('chats'))
         except sqlite3.IntegrityError as e:
             print(f"Error inserting profile: {e}")
@@ -267,39 +259,11 @@ def update_profile():
             SET profile_pic = ?, name = ?, number = ?, dob = ?
             WHERE username = ?
             VALUES (?, ?, ?, ?, ?, ?, ?)
-            """, (session['pfp'], name, email, number, dob, session['username']))
+            """, (session['pfp'], session['name'], session['email'], number, dob, session['username']))
             connection.commit()
-            insertion_sort()
             return  redirect(url_for('chats'))
         except sqlite3.IntegrityError as e:
             print(f"Error inserting profile: {e}")
-
-def insertion_sort():
-    connection = sqlite3.connect('profile.db')
-    cursor = connection.cursor()
-
-    cursor.execute("SELECT * FROM profiles")
-    profiles = cursor.fetchall()
-
-    # Insertion sort implementation based on the username field
-    for i in range(1, len(profiles)):
-        key = profiles[i]
-        j = i - 1
-        while j >= 0 and profiles[j][1] > key[1]:
-            profiles[j + 1] = profiles[j]
-            j -= 1
-        profiles[j + 1] = key
-
-    cursor.execute("DELETE FROM profiles")
-
-    # Insert sorted records back into the table
-    cursor.executemany(
-        "INSERT INTO profiles (profile_pic, username, name, email, number, dob, friends) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        profiles,
-    )
-
-    connection.commit()
-    connection.close()
 
 def get_profile(username):
     try:
@@ -379,19 +343,19 @@ def upload_file():
 
     return jsonify({'success': False, 'message': 'Invalid file type'}), 400
 
-@app.route('/insert_chat', methods=['POST'])
-def insert_chats():
-    if request.method == 'POST':
-        text = request.form['message']
-        connection = sqlite3.connect("profile.db")
-        cursor = connection.cursor()
-        try:
-            cursor.execute("""
-            INSERT INTO chats (sender, sender_username, receiver, receiver_username, text, blob)
-            """, (session["name"], session["email"], receiver, receiver_username, text, blob))
-            connection.commit()
-        except sqlite3.IntegrityError as e:
-            print(f"Error inserting chat: {e}")
+# @app.route('/insert_chat', methods=['POST'])
+# def insert_chats():
+#     if request.method == 'POST':
+#         text = request.form['message']
+#         connection = sqlite3.connect("profile.db")
+#         cursor = connection.cursor()
+#         try:
+#             cursor.execute("""
+#             INSERT INTO chats (sender, sender_username, receiver, receiver_username, text, blob)
+#             """, (session['name'], session['email'], receiver, receiver_username, text, blob))
+#             connection.commit()
+#         except sqlite3.IntegrityError as e:
+#             print(f"Error inserting chat: {e}")
 
 @app.route('/loginWithGoogle')
 def loginWithGoogle():
@@ -447,7 +411,7 @@ def callback():
         credentials = flow.credentials
         request_obj = google.auth.transport.requests.Request()
         id_info = id_token.verify_oauth2_token(
-            id_token=credentials.id_token, request=request_obj, audience=CLIENT_ID
+            id_token=credentials.id_token, request=request_obj, audience=google_client_secret['web']['client_id']
         )
         session['email'] = id_info.get('email')
         session['name'] = id_info.get('name')

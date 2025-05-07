@@ -1,6 +1,7 @@
 *.key
 *.csr
 *.crt
-.vscode/*
+.vscode/
+__pycache__/
 profile.db
-__pycache__/*
+*_client_secret.json
