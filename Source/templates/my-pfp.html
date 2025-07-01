@@ -2,43 +2,41 @@
 
 
 {% block content %}
-<div class="profile-portion">
-  <div class="profile-container">
+<div>
+  <div class="profile-portion">
+    <div class="profile-container">
 
-    <div class="dp profile-img-container">
-      <img class="profileimg" src="{{url_for('static', filename='images/uploads/profile_pics/' + pfp)}}">
+      <div class="dp profile-img-container">
+        <img class="profileimg" src="{{url_for('static', filename='images/uploads/profile_pics/' + pfp)}}">
+
+      </div>
+
+
+      <div class="counter">
+        <h3><strong>{{ num_of_posts }}</strong></h3>
+        <h5><strong>posts</strong></h5>
+      </div>
+
+      <div class="u-name">
+        <p class="profile-name">{{ name }}</p>
+      </div>
 
     </div>
-
-
-    <div class="counter">
-      <h3><strong>{{ num_of_posts }}</strong></h3>
-      <h5><strong>posts</strong></h5>
+    <div class="bio">
+      <h6>Bio .......................</h6>
     </div>
-    <div class="counter">
-      <h3><strong>100</strong></h3>
-      <h5><strong>friends</strong></h5>
-    </div>
-
-    <div class="u-name">
-      <p class="name">{{ name }}</p>
-    </div>
-
+    <a href="{{url_for('edit')}}">
+      <div class="edit-profile">
+        <button class="edit-btn">Edit Profile</button>
+      </div>
+    </a>
   </div>
-  <div class="bio">
-    <h6>Bio .......................</h6>
-  </div>
-  <a href="{{url_for('edit')}}">
-    <div class="edit-profile">
-      <button class="edit-btn">Edit Profile</button>
+  <div class="posts-container">
+    {% for post in posts%}
+    <div>
+      <img class="post" src="{{url_for('static', filename='images/uploads/posts/' + post)}}">
     </div>
-  </a>
-</div>
-<div class="posts-container">
-  {% for post in posts%}
-  <div>
-    <img class="post" src="{{url_for('static', filename='images/uploads/posts/' + post)}}">
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
 {% endblock %}

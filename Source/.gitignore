@@ -1,7 +1,9 @@
 *.key
 *.csr
 *.crt
-.vscode/
-__pycache__/
 profile.db
 *_client_secret.json
+
+.vscode/
+__pycache__/
+static/images/uploads/*

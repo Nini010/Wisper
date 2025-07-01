@@ -123,8 +123,9 @@ body {
 
 .search-icon {
   position: absolute;
-  top: 50%;
-  right: 10px;
+  top: 48%;
+  right: 0%;
+  margin-right: 1.5%;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -275,7 +276,7 @@ p {
 
 .Nav-opt {
   display: grid;
-  grid-template-columns: 20% 20% 20% 20% 20%;
+  grid-auto-flow: column;
   border-top: 2px solid #9290C3;
   height: 60px;
   background-color: #070F2B;
@@ -322,7 +323,7 @@ p {
 
 .profile-container {
   display: grid;
-  grid-template-columns: 31% 30% 30%;
+  grid-template-columns: 30% 70%;
   align-items: center;
   gap: 5px;
   padding: 10px;
@@ -377,6 +378,12 @@ h5 {
   color: #9290C3;
 }
 
+.profile-name {
+  font-size: large;
+  margin-top: 5%;
+  color: #9290C3;
+}
+
 .user {
   font-size: 11px;
   color: #737293;
@@ -413,7 +420,7 @@ h5 {
   width: 98%;
   height: 98%;
   object-fit: contain;
-  margin-top: 1%;
+  margin-top: 5%;
   margin-bottom: 1%;
   margin-left: 1%;
   margin-right: 1%;

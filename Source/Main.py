@@ -43,9 +43,9 @@ def myprofile():
 @app.route('/profile')
 def profile():
     username = request.args.get('username')
-    profile = get_profile((username,))
-    posts = get_posts(session['username'])
-    return render_template('Profilepage.html', page = 'settings', name = profile[1], pfp = profile[0], posts = posts, num_of_posts = len(posts))
+    profile = get_profile((username))
+    posts = get_posts(username)
+    return render_template('pfp.html', page = 'settings', name = profile[1], pfp = profile[0], posts = posts, num_of_posts = len(posts))
 
 @app.route('/notification')
 def notification():

@@ -6,11 +6,10 @@ import google.auth.transport.requests
 from authlib.integrations.flask_client import OAuth
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit
+import sqlite3
 import json
 import os
 import glob
-import uuid
-import sqlite3
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -276,7 +275,7 @@ def get_profile(username):
         WHERE username = ?
         """
 
-        cursor.execute(query, username)
+        cursor.execute(query, (username))
         rows = cursor.fetchone()
         if rows == None:
             print("No profile found")
@@ -288,7 +287,7 @@ def get_profile(username):
         if connection:
             connection.close()
 
-def search_profile(username):
+def search_profile(username, current_username):
     try:
         connection = sqlite3.connect('profile.db')
         cursor = connection.cursor()
@@ -296,8 +295,9 @@ def search_profile(username):
         SELECT profile_pic, name, username
         FROM profiles
         WHERE (username LIKE ? OR name LIKE ?)
+        AND username != ?
         """
-        cursor.execute(query,('%' + username + '%', '%' + username + '%'))
+        cursor.execute(query,('%' + username + '%', '%' + username + '%', current_username))
         rows = cursor.fetchall()
         return rows
     except sqlite3.Error as e:
@@ -310,7 +310,7 @@ def search_profile(username):
 @app.route('/search', methods=['POST'])
 def search():
     username = request.json.get('username', '')
-    results = search_profile(username)
+    results = search_profile(username, session['username'])
     # Format results for response
     profiles = [
         {"profile_pic": row[0], "name": row[1], "username": row[2]} for row in results
@@ -320,28 +320,42 @@ def search():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+app.config['PROFILE_UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'images/uploads/profile')
+# where posts go
+app.config['POST_UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'images/uploads/posts')
+# whitelist extensions
+ALLOWED_EXTENSIONS = {'png','jpg','jpeg','gif'}
+
+def allowedFile(filename):
+    return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/upload', methods=['POST'])
-def upload_file():
+def uploadFile():
     if 'file' not in request.files:
-        return jsonify({'success': False, 'message': 'No file part in the request'}), 400
+        return jsonify(success=False, message='No file part'), 400
 
     file = request.files['file']
-    current_page = request.form.get('currentPage', '')
-    if current_page == '/profileinfo':
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            session['pfp'] = filepath
-            file.save(filepath)
-            return jsonify({'success': True, 'message': 'File uploaded successfully!'})
-    else:
-        if file and allowed_file(file.filename):
-            filename = session['username'] + "-" + secure_filename(file.filename)
-            filepath = os.path.join("static/images/uploads/posts", filename)
-            file.save(filepath)
-            return jsonify({'success': True, 'message': 'File uploaded successfully!'})
+    if file.filename == '':
+        return jsonify(success=False, message='No file selected'), 400
 
-    return jsonify({'success': False, 'message': 'Invalid file type'}), 400
+    if not allowedFile(file.filename):
+        return jsonify(success=False, message='Invalid file type'), 400
+
+    filename = secure_filename(file.filename)
+    currentPage = request.form.get('currentPage','')
+
+    if currentPage == '/profileinfo':
+        os.makedirs(app.config['PROFILE_UPLOAD_FOLDER'], exist_ok=True)
+        filepath = os.path.join(app.config['PROFILE_UPLOAD_FOLDER'], filename)
+        session['pfp'] = filepath
+    else:
+        os.makedirs(app.config['POST_UPLOAD_FOLDER'], exist_ok=True)
+        # prefix by username if you like
+        username = session.get('username','anon')
+        filename = f"{username}-{filename}"
+        filepath = os.path.join(app.config['POST_UPLOAD_FOLDER'], filename)
+    file.save(filepath)
+    return jsonify(success=True, message='File uploaded successfully!')
 
 # @app.route('/insert_chat', methods=['POST'])
 # def insert_chats():
